@@ -1,12 +1,15 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
-import NavigationTab from "./pages/NavigationTab";
-import { NavigationContainer } from "@react-navigation/native";
 
+import ThemeProvider from "./components/Context";
+
+import RootNavigator from "./components/RootNavigator";
 export default function App() {
   return (
     <>
-      <NavigationTab />
+      <ThemeProvider>
+        <RootNavigator />
+      </ThemeProvider>
     </>
   );
 }

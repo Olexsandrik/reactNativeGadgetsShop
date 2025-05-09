@@ -13,6 +13,7 @@ export const COLORS_LIGHT = {
 
 export const COLORS = {
   appBackground: "#262626",
+  appBackgroundSecond: "#d3d3d3",
   primary900: "#BA68C8",
   primary300: "#e1bee7",
   primary200: "#514951",

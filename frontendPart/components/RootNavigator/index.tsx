@@ -4,6 +4,7 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import NavigationTab from "@/pages/NavigationTab";
 import { useThemeContext } from "../Context";
 import { COLORS } from "@/constants";
+import AuthNavigation from "@/pages/AuthNavigation";
 
 export default function RootNavigator() {
   const { theme } = useThemeContext();
@@ -17,7 +18,8 @@ export default function RootNavigator() {
   };
   return (
     <NavigationContainer theme={MyTheme}>
-      <NavigationTab />
+      {/* <NavigationTab /> */}
+      <AuthNavigation />
     </NavigationContainer>
   );
 }

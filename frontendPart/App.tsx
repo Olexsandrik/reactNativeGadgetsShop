@@ -4,6 +4,7 @@ import React from "react";
 import ThemeProvider from "./components/Context";
 
 import RootNavigator from "./components/RootNavigator";
+import AuthNavigation from "./pages/AuthNavigation";
 export default function App() {
   return (
     <>

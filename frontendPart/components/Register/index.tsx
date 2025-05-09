@@ -8,11 +8,38 @@ import {
   ScrollView,
 } from "react-native";
 import React from "react";
-import { PropsRegister } from "@/types";
+import { FormRegister, PropsRegister } from "@/types";
+import { useForm } from "react-hook-form";
+import Input from "../Input";
+import { useAuth } from "@/server/useAuth";
 
 export default function Register({ route, navigation }: PropsRegister) {
   const handleRegister = () => {
     navigation.navigate("login");
+  };
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormRegister>({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  const { hanlderRegister, loading } = useAuth("server/register");
+  const onSubmit = async (data: FormRegister) => {
+    if (data) {
+      await hanlderRegister(data);
+
+      console.log(data);
+      navigation.navigate("login");
+    }
+
+    return;
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -25,32 +52,63 @@ export default function Register({ route, navigation }: PropsRegister) {
         <View style={styles.form}>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Full Name</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your full name"
-              placeholderTextColor="#666"
+            <Input
+              control={control}
+              name="name"
+              placeholder="Enter you name"
+              styles={styles.input}
             />
+
+            {errors.name ? (
+              <Text
+                style={{
+                  color: "red",
+                }}
+              >
+                {errors.name.message}
+              </Text>
+            ) : null}
           </View>
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
+
+            <Input
+              control={control}
+              name="email"
+              styles={styles.input}
               placeholder="Enter your email"
-              placeholderTextColor="#666"
-              keyboardType="email-address"
-              autoCapitalize="none"
             />
+            {errors.email ? (
+              <Text
+                style={{
+                  color: "red",
+                }}
+              >
+                {errors.email.message}
+              </Text>
+            ) : null}
           </View>
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Password</Text>
-            <TextInput
-              style={styles.input}
+
+            <Input
+              control={control}
+              name="password"
+              styles={styles.input}
               placeholder="Create a password"
-              placeholderTextColor="#666"
-              secureTextEntry
             />
+
+            {errors.password ? (
+              <Text
+                style={{
+                  color: "red",
+                }}
+              >
+                {errors.password.message}
+              </Text>
+            ) : null}
           </View>
 
           <View style={styles.inputContainer}>
@@ -61,9 +119,22 @@ export default function Register({ route, navigation }: PropsRegister) {
               placeholderTextColor="#666"
               secureTextEntry
             />
+
+            {errors.password ? (
+              <Text
+                style={{
+                  color: "red",
+                }}
+              >
+                {errors.password.message}
+              </Text>
+            ) : null}
           </View>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleSubmit(onSubmit)}
+          >
             <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
 

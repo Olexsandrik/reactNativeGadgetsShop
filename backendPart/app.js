@@ -36,4 +36,8 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
+const PORT = 8081;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server is running at http://192.168.0.243:${PORT}`);
+});
 module.exports = app;

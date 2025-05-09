@@ -8,13 +8,29 @@ import {
   Image,
 } from "react-native";
 import React from "react";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { PropsLogin } from "@/types";
 
+import { LoginProps, PropsLogin } from "@/types";
+import { useForm } from "react-hook-form";
+import Input from "../Input";
 
 export default function Login({ route, navigation }: PropsLogin) {
   const handleRegister = () => {
     navigation.navigate("register");
+  };
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<LoginProps>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (data: LoginProps) => {
+    console.log(data);
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -26,26 +42,48 @@ export default function Login({ route, navigation }: PropsLogin) {
       <View style={styles.form}>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your email"
-            placeholderTextColor="#666"
-            keyboardType="email-address"
-            autoCapitalize="none"
+          <Input
+            control={control}
+            name="email"
+            placeholder="Enter you email"
+            styles={styles.input}
           />
+
+          {errors.email ? (
+            <Text
+              style={{
+                color: "red",
+              }}
+            >
+              {errors.email.message}
+            </Text>
+          ) : null}
         </View>
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your password"
-            placeholderTextColor="#666"
-            secureTextEntry
+          <Input
+            control={control}
+            name="password"
+            placeholder="Enter you password"
+            styles={styles.input}
           />
+
+          {errors.password ? (
+            <Text
+              style={{
+                color: "red",
+              }}
+            >
+              {errors.password.message}
+            </Text>
+          ) : null}
         </View>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleSubmit(onSubmit)}
+        >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 

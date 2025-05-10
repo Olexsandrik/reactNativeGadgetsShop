@@ -12,12 +12,15 @@ import React from "react";
 import { LoginProps, PropsLogin } from "@/types";
 import { useForm } from "react-hook-form";
 import Input from "../Input";
+import { useLogin } from "@/server/useLogin";
+import { useAuthContext } from "../Context/AuthContext";
 
 export default function Login({ route, navigation }: PropsLogin) {
   const handleRegister = () => {
     navigation.navigate("register");
   };
 
+  const { hanlderLogin } = useLogin("server/login");
   const {
     handleSubmit,
     control,
@@ -30,7 +33,9 @@ export default function Login({ route, navigation }: PropsLogin) {
   });
 
   const onSubmit = (data: LoginProps) => {
-    console.log(data);
+    if (data) {
+      hanlderLogin(data);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>

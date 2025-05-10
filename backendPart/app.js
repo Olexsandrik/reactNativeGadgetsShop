@@ -1,9 +1,10 @@
+require("dotenv").config();
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-
+const cors = require("cors");
 var routers = require("./src/routes/index");
 
 var app = express();
@@ -25,6 +26,8 @@ app.use(function (req, res, next) {
   next(createError(404));
 });
 
+app.use(cors());
+
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
@@ -36,8 +39,4 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-const PORT = 8081;
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server is running at http://192.168.0.243:${PORT}`);
-});
 module.exports = app;

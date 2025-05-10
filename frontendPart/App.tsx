@@ -5,13 +5,14 @@ import ThemeProvider from "./components/Context";
 
 import RootNavigator from "./components/RootNavigator";
 import AuthNavigation from "./pages/AuthNavigation";
+import AuthContext from "./components/Context/AuthContext";
 export default function App() {
   return (
-    <>
+    <AuthContext>
       <ThemeProvider>
         <RootNavigator />
       </ThemeProvider>
-    </>
+    </AuthContext>
   );
 }
 

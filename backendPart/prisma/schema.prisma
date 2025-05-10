@@ -10,10 +10,11 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" 
-  url      = env("DATABASE_URL")
-   directUrl = env("DIRECT_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
 }
+
 
 model Product {
   id          Int      @id @default(autoincrement())
@@ -37,6 +38,7 @@ model Category {
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
+  name      String
   password  String
   orders    Order[]
   createdAt DateTime @default(now())

@@ -5,10 +5,11 @@ import NavigationTab from "@/pages/NavigationTab";
 import { useThemeContext } from "../Context";
 import { COLORS } from "@/constants";
 import AuthNavigation from "@/pages/AuthNavigation";
+import AuthContext, { useAuthContext } from "../Context/AuthContext";
 
 export default function RootNavigator() {
   const { theme } = useThemeContext();
-
+  const { user } = useAuthContext();
   const MyTheme = {
     ...DefaultTheme,
     colors: {
@@ -18,8 +19,7 @@ export default function RootNavigator() {
   };
   return (
     <NavigationContainer theme={MyTheme}>
-      {/* <NavigationTab /> */}
-      <AuthNavigation />
+      {user ? <NavigationTab /> : <AuthNavigation />}
     </NavigationContainer>
   );
 }

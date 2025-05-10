@@ -79,26 +79,45 @@ export default function UserInfo() {
                   },
                 ]}
               >
-                <Text
-                  style={[
-                    styles.itemName,
-                    {
-                      color: theme ? COLORS.grey300 : COLORS.appBackground,
-                    },
-                  ]}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
                 >
-                  {item.product.name}
-                </Text>
-                <Text
-                  style={[
-                    styles.itemPrice,
-                    {
-                      color: theme ? COLORS.grey300 : COLORS.appBackground,
-                    },
-                  ]}
-                >
-                  ${item.product.price}
-                </Text>
+                  <View>
+                    <Text
+                      style={[
+                        styles.itemName,
+                        {
+                          color: theme ? COLORS.grey300 : COLORS.appBackground,
+                        },
+                      ]}
+                    >
+                      {item.product.name}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.itemPrice,
+                        {
+                          color: theme ? COLORS.grey300 : COLORS.appBackground,
+                        },
+                      ]}
+                    >
+                      ${item.product.price}
+                    </Text>
+                  </View>
+
+                  <View>
+                    <Text
+                      style={{
+                        color: theme ? COLORS.grey300 : COLORS.appBackground,
+                      }}
+                    >
+                      0
+                    </Text>
+                  </View>
+                </View>
               </View>
             ))}
           </View>
@@ -157,15 +176,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-//  <View style={styles.orders}>
-//         {user.orders?.map((order: any) => {
-//           return order?.items?.map((item: any, index: any) => {
-//             return (
-//               <View key={item.id}>
-//                 <Text>{item.product.name}</Text>
-//                 <Text>{item.product.price}</Text>
-//               </View>
-//             );
-//           });
-//         })}
-//       </View>

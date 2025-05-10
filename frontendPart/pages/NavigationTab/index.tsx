@@ -8,6 +8,7 @@ import { COLORS } from "@/constants";
 import Orders from "@/components/Orders";
 import Settings from "@/components/Settings";
 import Search from "@/components/Search";
+import ScreenProductNavigation from "../ScreenProductNavigation";
 const Tab = createBottomTabNavigator();
 export default function NavigationTab() {
   return (
@@ -24,7 +25,7 @@ export default function NavigationTab() {
     >
       <Tab.Screen
         name="assortment"
-        component={ListOfGoods}
+        component={ScreenProductNavigation}
         options={{
           tabBarLabel: "assortment",
           tabBarIcon: ({ color, size }) => {

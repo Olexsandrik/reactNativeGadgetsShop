@@ -2,8 +2,10 @@ var express = require("express");
 
 const prisma = require("../../prisma/prisma");
 const UserController = require("../Controllers/user-contoller");
+const ProductController = require("../Controllers/product-controller");
 var router = express.Router();
 const authMiddleware = require("../middleware/middleware");
+
 /* GET home page. */
 
 router.get("/", function (req, res, next) {
@@ -13,10 +15,20 @@ router.get("/", function (req, res, next) {
 router.get("/profile", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
-
+// auth
 router.post("/register", UserController.register);
 
 router.post("/login", UserController.login);
+//
+
+//Product
+router.get("/products", authMiddleware, ProductController.getAllProducts);
+router.delete(
+  "/products/:id",
+  authMiddleware,
+  ProductController.removeProducts
+);
+//
 
 router.get("/me", authMiddleware, async (req, res) => {
   const user = await prisma.user.findUnique({
@@ -36,6 +48,7 @@ router.get("/me", authMiddleware, async (req, res) => {
           items: {
             select: {
               id: true,
+              quantity: true,
               product: {
                 select: {
                   id: true,

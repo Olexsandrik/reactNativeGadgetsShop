@@ -19,7 +19,6 @@ router.post("/register", UserController.register);
 router.post("/login", UserController.login);
 
 router.get("/me", authMiddleware, async (req, res) => {
-  console.log("REQ.USER", req.user);
   const user = await prisma.user.findUnique({
     where: { id: req.user.userId },
     select: {
@@ -27,10 +26,32 @@ router.get("/me", authMiddleware, async (req, res) => {
       name: true,
       email: true,
       createdAt: true,
-      orders: true,
+      orders: {
+        select: {
+          id: true,
+          totalPrice: true,
+          status: true,
+          createdAt: true,
+
+          items: {
+            select: {
+              id: true,
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  imageUrl: true,
+                  price: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 
+  console.dir(user, { depth: null, colors: true });
   if (!user) return res.status(404).json({ message: "User not found" });
 
   res.json(user);

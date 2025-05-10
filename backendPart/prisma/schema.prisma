@@ -25,8 +25,9 @@ model Product {
   category    Category @relation(fields: [categoryId], references: [id])
   categoryId  Int
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-   orderItems  OrderItem[]
+ updatedAt DateTime? @updatedAt
+
+  orderItems  OrderItem[]
 }
 
 model Category {

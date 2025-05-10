@@ -3,9 +3,12 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PropsChildren } from "@/types";
 import { BASE_URL } from "@/constants";
+import { useNavigation } from "@react-navigation/native";
 const authChange = createContext({});
 export default function AuthContext({ children }: PropsChildren) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const login = async ({ token, userData }: any) => {
     await AsyncStorage.setItem("token", token);
     setUser(userData);
@@ -18,7 +21,7 @@ export default function AuthContext({ children }: PropsChildren) {
 
   const checkToken = async () => {
     const token = await AsyncStorage.getItem("token");
-
+    setLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/server/me`, {
         method: "GET",
@@ -35,6 +38,8 @@ export default function AuthContext({ children }: PropsChildren) {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,6 +52,7 @@ export default function AuthContext({ children }: PropsChildren) {
         user,
         login,
         logout,
+        loading,
       }}
     >
       {children}

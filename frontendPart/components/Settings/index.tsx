@@ -1,16 +1,36 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { View, Text } from "react-native";
 import React from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+} from "@react-navigation/drawer";
 import UserInfo from "../UserInfo";
 import ChangeTheme from "../ChangeTheme";
 import LogOut from "../LogOut";
 import { COLORS } from "@/constants";
+import { useAuthContext } from "../Context/AuthContext";
 const Drawer = createDrawerNavigator();
 export default function Settings() {
+  const { logout } = useAuthContext();
+
   return (
     <>
       <Drawer.Navigator
+        drawerContent={(props) => {
+          return (
+            <DrawerContentScrollView {...props}>
+              <DrawerItemList {...props} />
+              <DrawerItem
+                label="LogOut"
+                onPress={logout}
+                labelStyle={{ color: COLORS.primary300 }}
+              />
+            </DrawerContentScrollView>
+          );
+        }}
         screenOptions={{
           drawerActiveBackgroundColor: COLORS.appBackground,
           drawerActiveTintColor: COLORS.primary900,
@@ -26,7 +46,6 @@ export default function Settings() {
       >
         <Drawer.Screen name="User Info" component={UserInfo} />
         <Drawer.Screen name="Theme" component={ChangeTheme} />
-        <Drawer.Screen name="LogOut" component={LogOut} />
       </Drawer.Navigator>
     </>
   );

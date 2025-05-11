@@ -3,6 +3,7 @@ var express = require("express");
 const prisma = require("../../prisma/prisma");
 const UserController = require("../Controllers/user-contoller");
 const ProductController = require("../Controllers/product-controller");
+const CategoryController = require("../Controllers/category-controller");
 var router = express.Router();
 const authMiddleware = require("../middleware/middleware");
 
@@ -28,6 +29,15 @@ router.delete(
   authMiddleware,
   ProductController.removeProducts
 );
+//
+
+//Categories
+router.get(
+  "/getAllCategories/:id",
+  authMiddleware,
+  CategoryController.getAllCategory
+);
+
 //
 
 router.get("/me", authMiddleware, async (req, res) => {

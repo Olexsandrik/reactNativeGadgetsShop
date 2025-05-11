@@ -1,106 +1,182 @@
-import { View, Text, Image, FlatList, Pressable } from "react-native";
-import React from "react";
-
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  Pressable,
+  TextInput,
+  StatusBar,
+  TouchableOpacity,
+  ScrollView,
+  Button,
+} from "react-native";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { useWindowDimensions } from "react-native";
-const products = [
-  {
-    id: 5,
-    name: "iPhone 14 Pro",
-    description: "Apple iPhone 14 Pro з камерою 48MP і A16 Bionic чипом",
-    price: 1199,
-    imageUrl:
-      "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-14-pro-model-unselect-gallery-1-202209?wid=512&hei=512&fmt=jpeg&qlt=90&.v=1660753619946",
-    categoryId: 1,
-    createdAt: "2025-05-10T15:59:24.403Z",
-    updatedAt: null,
-  },
-  {
-    id: 6,
-    name: "Samsung Galaxy S23",
-    description: 'Флагман від Samsung з дисплеєм Dynamic AMOLED 6.1"',
-    price: 999.99,
-    imageUrl:
-      "https://images.samsung.com/is/image/samsung/p6pim/ua/2302/gallery/ua-galaxy-s23-s911-sm-s911bzadeua-534379361?$650_519_PNG$",
-    categoryId: 1,
-    createdAt: "2025-05-10T15:59:24.403Z",
-    updatedAt: null,
-  },
-  {
-    id: 7,
-    name: "MacBook Air M2",
-    description: 'Легкий ноутбук з чипом Apple M2, 13.6" Retina Display',
-    price: 1299,
-    imageUrl:
-      "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/macbook-air-m2-select-202206?wid=512&hei=512&fmt=jpeg&qlt=95&.v=1653493200207",
-    categoryId: 2,
-    createdAt: "2025-05-10T15:59:24.403Z",
-    updatedAt: null,
-  },
-  {
-    id: 8,
-    name: "Dell XPS 13",
-    description:
-      "13-дюймовий ультрабук з Intel Core i7 та дисплеєм InfinityEdge",
-    price: 1199,
-    imageUrl:
-      "https://i.dell.com/sites/csimages/Master_Imagery/all/xps-13-9310-laptop.png",
-    categoryId: 2,
-    createdAt: "2025-05-10T15:59:24.403Z",
-    updatedAt: null,
-  },
-  {
-    id: 9,
-    name: "Apple MagSafe Charger",
-    description: "Магнітна бездротова зарядка для iPhone",
-    price: 39,
-    imageUrl:
-      "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MHXH3?wid=512&hei=512&fmt=jpeg&qlt=90&.v=1601688658000",
-    categoryId: 3,
-    createdAt: "2025-05-10T15:59:24.403Z",
-    updatedAt: null,
-  },
-  {
-    id: 10,
-    name: "Logitech MX Master 3",
-    description: "Професійна бездротова миша з ергономічним дизайном",
-    price: 99,
-    imageUrl:
-      "https://resource.logitech.com/w_800,c_limit,q_auto,f_auto,dpr_auto/d_transparent.gif/content/dam/logitech/en/products/mice/mx-master-3/gallery/mx-master-3-top-view.png?v=1",
-    categoryId: 3,
-    createdAt: "2025-05-10T15:59:24.403Z",
-    updatedAt: null,
-  },
-];
+import { useCatalog } from "@/server/useCatalog";
+import Spinner from "react-native-loading-spinner-overlay";
+import { useAllProduct } from "@/server/useAllProduct";
+import { set } from "react-hook-form";
 
 export default function ListOfGoods({ navigation }: any) {
   const { width, height } = useWindowDimensions();
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  const { catalog, loading, handleGetCategories, setCatalog } = useCatalog(
+    `server/getAllCategories`
+  );
+  const { allProducts, handleAllProducts, productLoading } =
+    useAllProduct("server/products");
 
   const handlerProduct = (item: any) => {
     navigation.navigate("ScreenProduct", { item });
   };
+
+  const handleSmartPhone = async () => {
+    await handleGetCategories(1);
+  };
+  const handleSmartLaptops = async () => {
+    await handleGetCategories(2);
+  };
+  const handleSmartAccessories = async () => {
+    await handleGetCategories(3);
+  };
+  const hanldeAllProducts = async () => {
+    setCatalog([]);
+    await handleAllProducts();
+  };
+
+  useEffect(() => {
+    setCatalog([]); 
+    handleAllProducts(); 
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header} />
-      <FlatList
-        data={products}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-        renderItem={({ item }) => (
-          <Pressable onPress={() => handlerProduct(item)}>
-            <View style={[styles.itemContainer, { width: (width - 36) / 2 }]}>
-              <View style={styles.imageContainer}>
-                <Image source={{ uri: item.imageUrl }} style={styles.image} />
-              </View>
-              <View style={styles.infoContainer}>
-                <Text style={styles.name}>{item.name}</Text>
-                <Text style={styles.price}>${item.price}</Text>
-              </View>
+    <View
+      style={[
+        styles.container,
+        isDarkMode ? styles.darkContainer : styles.lightContainer,
+      ]}
+    >
+      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
+
+      <View
+        style={[
+          styles.headerWrapper,
+          isDarkMode ? styles.darkHeaderWrapper : styles.lightHeaderWrapper,
+        ]}
+      >
+        <View style={styles.headerContainer}>
+          <View style={styles.logoContainer}>
+            <Image
+              style={styles.logo}
+              source={{
+                uri: "https://sdmntprnortheu.oaiusercontent.com/files/00000000-691c-61f4-878f-aebdef03eade/raw?se=2025-05-11T11%3A57%3A31Z&sp=r&sv=2024-08-04&sr=b&scid=00000000-0000-0000-0000-000000000000&skoid=76024c37-11e2-4c92-aa07-7e519fbe2d0f&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-11T07%3A01%3A04Z&ske=2025-05-12T07%3A01%3A04Z&sks=b&skv=2024-08-04&sig=xkB6/JbEPj7FzRD3f62EG0RgR7cc7%2BBgv4fU/nEr9eo%3D",
+              }}
+            />
+          </View>
+
+          <View style={styles.searchContainer}>
+            <View
+              style={[
+                styles.inputContainer,
+                isDarkMode
+                  ? styles.darkInputContainer
+                  : styles.lightInputContainer,
+              ]}
+            >
+              <Image
+                source={require("../../assets/images/search.png")}
+                style={[
+                  styles.icon,
+                  isDarkMode ? styles.darkIcon : styles.lightIcon,
+                ]}
+                resizeMode="contain"
+              />
+              <TextInput
+                placeholder="Search products..."
+                placeholderTextColor={isDarkMode ? "#a8b5db" : "#6b7280"}
+                style={[
+                  styles.input,
+                  isDarkMode ? styles.darkInput : styles.lightInput,
+                ]}
+              />
             </View>
-          </Pressable>
-        )}
-        contentContainerStyle={styles.list}
-      />
+          </View>
+          <TouchableOpacity style={styles.filterButton}>
+            <Text
+              style={[
+                styles.filterText,
+                isDarkMode ? styles.darkFilterText : styles.lightFilterText,
+              ]}
+            >
+              Filter
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView
+          horizontal={true}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: "space-around",
+          }}
+        >
+          <Button title="All" onPress={hanldeAllProducts} />
+          <Button title="Smartphones" onPress={handleSmartPhone} />
+          <Button title="Laptops" onPress={handleSmartLaptops} />
+          <Button title="Accessories" onPress={handleSmartAccessories} />
+        </ScrollView>
+      </View>
+
+      {loading ? (
+        <Spinner
+          visible={loading}
+          textContent={"Loading..."}
+          textStyle={{ color: "#FFF" }}
+        />
+      ) : (
+        <FlatList
+          data={catalog?.products || allProducts}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          renderItem={({ item }) => (
+            <Pressable onPress={() => handlerProduct(item)}>
+              <View
+                style={[
+                  styles.itemContainer,
+                  { width: (width - 36) / 2 },
+                  isDarkMode
+                    ? styles.darkItemContainer
+                    : styles.lightItemContainer,
+                ]}
+              >
+                <View style={styles.imageContainer}>
+                  <Image source={{ uri: item.imageUrl }} style={styles.image} />
+                </View>
+                <View style={styles.infoContainer}>
+                  <Text
+                    style={[
+                      styles.name,
+                      isDarkMode ? styles.darkText : styles.lightText,
+                    ]}
+                  >
+                    {item.name}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.price,
+                      isDarkMode ? styles.darkPrice : styles.lightPrice,
+                    ]}
+                  >
+                    ${item.price}
+                  </Text>
+                </View>
+              </View>
+            </Pressable>
+          )}
+          contentContainerStyle={styles.list}
+        />
+      )}
     </View>
   );
 }
@@ -108,30 +184,140 @@ export default function ListOfGoods({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  darkContainer: {
     backgroundColor: "#121212",
+  },
+  lightContainer: {
+    backgroundColor: "#f5f5f7",
+  },
+  headerWrapper: {
+    paddingTop: 10,
+    paddingBottom: 15,
+    borderBottomWidth: 1,
+  },
+  darkHeaderWrapper: {
+    backgroundColor: "#1a1a1a",
+    borderBottomColor: "#333",
+  },
+  lightHeaderWrapper: {
+    backgroundColor: "#ffffff",
+    borderBottomColor: "#e5e7eb",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+  },
+  logoContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  logo: {
+    width: 50,
+    height: 80,
+    borderRadius: 10,
+  },
+  logoText: {
+    fontSize: 12,
+    fontWeight: "600",
+    marginTop: 4,
+  },
+  darkText: {
+    color: "#ffffff",
+  },
+  lightText: {
+    color: "#333333",
+  },
+  searchContainer: {
+    flex: 1,
+    paddingHorizontal: 12,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    height: 44,
+  },
+  darkInputContainer: {
+    backgroundColor: "#2a2a2a",
+  },
+  lightInputContainer: {
+    backgroundColor: "#f2f2f7",
+  },
+  icon: {
+    width: 18,
+    height: 18,
+    marginRight: 8,
+  },
+  darkIcon: {
+    tintColor: "#ab8bff",
+  },
+  lightIcon: {
+    tintColor: "#7c4dff",
+  },
+  input: {
+    flex: 1,
+    fontSize: 14,
+    height: "100%",
+    padding: 0,
+  },
+  darkInput: {
+    color: "#ffffff",
+  },
+  lightInput: {
+    color: "#333333",
+  },
+  filterButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: "#7c4dff",
+  },
+  filterText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#ffffff",
+  },
+  darkFilterText: {
+    color: "#ffffff",
+  },
+  lightFilterText: {
+    color: "#ffffff",
   },
   header: {
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderBottomWidth: 0.5,
-    borderBottomColor: "#333",
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "500",
-    color: "#a970ff",
     textAlign: "center",
   },
   list: {
-    padding: 16,
+    padding: 10,
     alignItems: "center",
   },
   itemContainer: {
     marginBottom: 16,
-    marginLeft: 7,
+    marginLeft: 5,
     borderRadius: 12,
     overflow: "hidden",
+  },
+  darkItemContainer: {
     backgroundColor: "#1e1e1e",
+  },
+  lightItemContainer: {
+    backgroundColor: "#ffffff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   imageContainer: {
     width: "100%",
@@ -150,13 +336,17 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   name: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "600",
-    color: "#ffffff",
     marginBottom: 4,
   },
   price: {
     fontSize: 16,
-    color: "#999999",
+  },
+  darkPrice: {
+    color: "#ab8bff",
+  },
+  lightPrice: {
+    color: "#7c4dff",
   },
 });

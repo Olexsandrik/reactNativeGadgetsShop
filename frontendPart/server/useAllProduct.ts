@@ -3,9 +3,10 @@ import { AsyncLocalStorage } from "async_hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { error } from "console";
+import { AllProducts, Products } from "@/types";
 
 export const useAllProduct = (mainUrl: string) => {
-  const [allProducts, setAllProducts] = useState<any[]>([]);
+  const [allProducts, setAllProducts] = useState<Products[]>([]);
   const [productLoading, setProductLoading] = useState(false);
 
   const [page, setPage] = useState(1);

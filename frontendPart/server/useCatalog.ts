@@ -2,9 +2,11 @@ import { BASE_URL } from "@/constants";
 import { AsyncLocalStorage } from "async_hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
+import { CategoryResponse } from "@/types";
 
 export const useCatalog = (mainUrl: string) => {
-  const [catalog, setCatalog] = useState<any>();
+  const [catalog, setCatalog] = useState<CategoryResponse | null>(null);
+
   const [loading, setLoading] = useState(false);
 
   const handleGetCategories = async (id: number) => {

@@ -4,11 +4,12 @@ import {
   Pressable,
   Image,
   useWindowDimensions,
+  StyleSheet,
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ProductsCarts({ item, styles, theme }: any) {
+export default function ProductsCarts({ item, theme }: any) {
   const navigation = useNavigation<any>();
   const { width, height } = useWindowDimensions();
   const handlerProduct = (item: any) => {
@@ -42,3 +43,78 @@ export default function ProductsCarts({ item, styles, theme }: any) {
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  darkText: {
+    color: "#ffffff",
+  },
+  lightText: {
+    color: "#333333",
+  },
+  darkItemContainer: {
+    backgroundColor: "#1e1e1e",
+  },
+  lightItemContainer: {
+    backgroundColor: "#ffffff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  darkInput: {
+    color: "#ffffff",
+  },
+
+  lightFilterText: {
+    color: "#ffffff",
+  },
+  header: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderBottomWidth: 0.5,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "500",
+    textAlign: "center",
+  },
+
+  itemContainer: {
+    marginBottom: 16,
+    marginLeft: 5,
+    borderRadius: 12,
+    overflow: "hidden",
+  },
+
+  imageContainer: {
+    width: "100%",
+    height: 200,
+    backgroundColor: "#ffffff",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
+  },
+  infoContainer: {
+    padding: 16,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  price: {
+    fontSize: 16,
+  },
+  darkPrice: {
+    color: "#ab8bff",
+  },
+  lightPrice: {
+    color: "#7c4dff",
+  },
+});

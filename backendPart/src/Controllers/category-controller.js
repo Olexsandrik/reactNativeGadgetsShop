@@ -11,6 +11,7 @@ const CategoryController = {
         },
       });
 
+      console.log(findAllProductsAndCategories);
       res.status(201).json(findAllProductsAndCategories);
     } catch (error) {
       console.error("GetAllProducts error:", error);

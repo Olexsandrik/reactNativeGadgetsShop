@@ -5,24 +5,27 @@ import {
   Pressable,
   Image,
   ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 import React from "react";
 import ProductsCarts from "../ProductsCards";
+import { CardsType } from "@/types";
 
 export default function Cards({
   catalog,
   allProducts,
   theme,
   productLoading,
-  styles,
   fetchProducts,
-}: any) {
+}: CardsType) {
   return (
     <FlatList
       data={catalog?.products || allProducts}
       keyExtractor={(item) => item.id.toString()}
       numColumns={2}
-      renderItem={({ item }) => <ProductsCarts item={item} theme={theme} styles={styles} />}
+      renderItem={({ item }) => (
+        <ProductsCarts item={item} theme={theme} styles={styles} />
+      )}
       contentContainerStyle={styles.list}
       onEndReached={fetchProducts}
       onEndReachedThreshold={0.5}
@@ -36,3 +39,10 @@ export default function Cards({
     />
   );
 }
+
+const styles = StyleSheet.create({
+  list: {
+    padding: 10,
+    alignItems: "center",
+  },
+});

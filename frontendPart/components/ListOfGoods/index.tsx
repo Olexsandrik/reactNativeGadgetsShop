@@ -1,23 +1,11 @@
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  Pressable,
-  TextInput,
-  StatusBar,
-  TouchableOpacity,
-  ScrollView,
-  Button,
-  ActivityIndicator,
-} from "react-native";
+import { View, StatusBar } from "react-native";
 import { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import { useWindowDimensions } from "react-native";
+
 import { useCatalog } from "@/server/useCatalog";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useAllProduct } from "@/server/useAllProduct";
-import { set } from "react-hook-form";
+
 import Header from "../Header";
 import Categories from "../Categories";
 import Cards from "../Cards";
@@ -35,22 +23,22 @@ export default function ListOfGoods() {
   const [activeSource, setActiveSource] = useState<"all" | "catalog">("all");
 
   const handleSmartPhone = async () => {
-    setCatalog([]);
+    setCatalog(null);
     setActiveSource("catalog");
     await handleGetCategories(1);
   };
   const handleSmartLaptops = async () => {
-    setCatalog([]);
+    setCatalog(null);
     setActiveSource("catalog");
     await handleGetCategories(2);
   };
   const handleSmartAccessories = async () => {
-    setCatalog([]);
+    setCatalog(null);
     setActiveSource("catalog");
     await handleGetCategories(3);
   };
   const hanldeAllProducts = async () => {
-    setCatalog([]);
+    setCatalog(null);
     setActiveSource("all");
     await fetchProducts();
   };
@@ -60,15 +48,15 @@ export default function ListOfGoods() {
     setSortOrder(newOrder);
 
     if (activeSource === "all") {
-      setAllProducts((prev: any) => {
-        return [...(prev || [])].sort((a: any, b: any) => {
+      setAllProducts((prev) => {
+        return [...prev].sort((a, b) => {
           return newOrder === "asc" ? a.price - b.price : b.price - a.price;
         });
       });
     }
     if (activeSource === "catalog") {
       setCatalog((prev: any) => {
-        const sorted = [...(prev.products || [])].sort((a: any, b: any) => {
+        const sorted = [...(prev.products || [])].sort((a, b) => {
           return newOrder === "asc" ? a.price - b.price : b.price - a.price;
         });
 
@@ -81,7 +69,7 @@ export default function ListOfGoods() {
   };
 
   useEffect(() => {
-    setCatalog([]);
+    setCatalog(null);
 
     fetchProducts();
   }, []);
@@ -123,7 +111,6 @@ export default function ListOfGoods() {
           allProducts={allProducts}
           theme={isDarkMode}
           productLoading={productLoading}
-          styles={styles}
           fetchProducts={fetchProducts}
         />
       )}
@@ -248,27 +235,14 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textAlign: "center",
   },
-  list: {
-    padding: 10,
-    alignItems: "center",
-  },
+
   itemContainer: {
     marginBottom: 16,
     marginLeft: 5,
     borderRadius: 12,
     overflow: "hidden",
   },
-  darkItemContainer: {
-    backgroundColor: "#1e1e1e",
-  },
-  lightItemContainer: {
-    backgroundColor: "#ffffff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
+
   imageContainer: {
     width: "100%",
     height: 200,

@@ -60,6 +60,7 @@ const ProductController = {
         },
       };
 
+      console.log(response);
       res.json(response);
     } catch (error) {
       console.error("GetAllProducts error:", error);

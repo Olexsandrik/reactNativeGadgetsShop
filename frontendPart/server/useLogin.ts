@@ -1,11 +1,12 @@
 import { useAuthContext } from "@/components/Context/AuthContext";
 import { BASE_URL } from "@/constants";
+import { LoginProps } from "@/types";
 import { useState } from "react";
 
 export const useLogin = (mainUrl: string) => {
   const [loading, setLoading] = useState(false);
-  const { user, login, logout } = useAuthContext();
-  const hanlderLogin = async (loginData: any) => {
+  const { login } = useAuthContext();
+  const hanlderLogin = async (loginData: LoginProps) => {
     setLoading(true);
     try {
       const response = await fetch(`${BASE_URL}/${mainUrl}`, {
@@ -23,6 +24,8 @@ export const useLogin = (mainUrl: string) => {
         token: res.token,
         userData: res.user,
       });
+
+      console.log(res.user);
     } catch (error) {
       console.error(error);
     } finally {

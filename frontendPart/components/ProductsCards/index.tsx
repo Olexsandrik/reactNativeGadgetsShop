@@ -8,11 +8,17 @@ import {
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
+import {
+  ProductCartProps,
+  Products,
+  ProductsProps,
+  PropsNavigationProducts,
+} from "@/types";
 
-export default function ProductsCarts({ item, theme }: any) {
-  const navigation = useNavigation<any>();
-  const { width, height } = useWindowDimensions();
-  const handlerProduct = (item: any) => {
+export default function ProductsCarts({ item, theme }: ProductCartProps) {
+  const navigation = useNavigation<ProductsProps>();
+  const { width } = useWindowDimensions();
+  const handlerProduct = (item: Products) => {
     navigation.navigate("ScreenProduct", { item });
   };
   return (

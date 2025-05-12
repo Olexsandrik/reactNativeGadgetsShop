@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import Input from "../Input";
 import { useAuth } from "@/server/useAuth";
 
-export default function Register({ route, navigation }: PropsRegister) {
+export default function Register({ navigation }: PropsRegister) {
   const handleRegister = () => {
     navigation.navigate("login");
   };
@@ -30,7 +30,7 @@ export default function Register({ route, navigation }: PropsRegister) {
     },
   });
 
-  const { hanlderRegister, loading } = useAuth("server/register");
+  const { hanlderRegister } = useAuth("server/register");
   const onSubmit = async (data: FormRegister) => {
     if (data) {
       await hanlderRegister(data);

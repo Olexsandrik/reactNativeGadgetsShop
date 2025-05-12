@@ -1,5 +1,3 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { View, Text } from "react-native";
 import React from "react";
 import {
   createDrawerNavigator,
@@ -9,7 +7,6 @@ import {
 } from "@react-navigation/drawer";
 import UserInfo from "../UserInfo";
 import ChangeTheme from "../ChangeTheme";
-import LogOut from "../LogOut";
 import { COLORS } from "@/constants";
 import { useAuthContext } from "../Context/AuthContext";
 const Drawer = createDrawerNavigator();

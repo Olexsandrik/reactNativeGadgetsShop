@@ -1,4 +1,7 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
 import { ReactNode } from "react";
 
 export type AuthStackParamList = {
@@ -77,4 +80,41 @@ export type CardsType = {
   theme: boolean;
   productLoading: boolean;
   fetchProducts: () => void;
+};
+export type CategoriesProps = {
+  hanldeAllProducts: () => void;
+  handleSmartPhone: () => void;
+  handleSmartLaptops: () => void;
+  handleSmartAccessories: () => void;
+};
+export type PropsNavigationProducts = {
+  ScreenProducts: undefined;
+  ScreenProduct: { item: Products };
+};
+export type ProductCartProps = {
+  item: Products;
+  theme: boolean;
+};
+export type ProductsCartsNavigation = {
+  navigation: NativeStackScreenProps<PropsNavigationProducts>;
+};
+export type ProductsProps = NativeStackNavigationProp<
+  PropsNavigationProducts,
+  "ScreenProducts"
+>;
+export type LoginPropsLogin = {
+  token: string;
+  userData: User;
+};
+
+export type User = {
+  id: string;
+  email: string;
+  name: string;
+  password: string;
+  createdAt: Date;
+};
+export type HeaderProps = {
+  minMaxPrice: () => void;
+  theme: boolean;
 };

@@ -1,19 +1,20 @@
 import { View, Text } from "react-native";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { PropsChildren } from "@/types";
+import { LoginPropsLogin, PropsChildren, User } from "@/types";
 import { BASE_URL } from "@/constants";
 import { useNavigation } from "@react-navigation/native";
+
 const authChange = createContext({});
 export default function AuthContext({ children }: PropsChildren) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const login = async ({ token, userData }: any) => {
+  const login = async ({ token, userData }: LoginPropsLogin) => {
     await AsyncStorage.setItem("token", token);
     setUser(userData);
 
-    console.log(token);
+    console.log(userData);
   };
 
   const logout = async () => {

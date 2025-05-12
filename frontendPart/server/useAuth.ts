@@ -1,11 +1,12 @@
 import { BASE_URL } from "@/constants";
+import { FormRegister } from "@/types";
 import { useState } from "react";
 
 export const useAuth = (mainUrl: string) => {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
 
-  const hanlderRegister = async (register: any) => {
+  const hanlderRegister = async (register: FormRegister) => {
     setLoading(true);
     try {
       const response = await fetch(`${BASE_URL}/${mainUrl}`, {

@@ -7,13 +7,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
+import { CategoriesProps } from "@/types";
+
 
 export default function Categories({
   hanldeAllProducts,
   handleSmartPhone,
   handleSmartLaptops,
   handleSmartAccessories,
-}: any) {
+}: CategoriesProps) {
   return (
     <ScrollView
       horizontal={true}

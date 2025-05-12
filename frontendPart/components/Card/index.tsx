@@ -1,3 +1,5 @@
+import { PropsNavigationProducts } from "@/types";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import {
   View,
   Text,
@@ -7,7 +9,9 @@ import {
   Dimensions,
 } from "react-native";
 
-export default function Card({ navigation, route }: any) {
+export default function Card({
+  route,
+}: NativeStackScreenProps<PropsNavigationProducts, "ScreenProduct">) {
   const { item } = route.params;
 
   return (

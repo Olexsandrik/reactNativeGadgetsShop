@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  FlatList,
-  Pressable,
-  Image,
-  ActivityIndicator,
-  StyleSheet,
-} from "react-native";
+import { View, FlatList, ActivityIndicator, StyleSheet } from "react-native";
 import React from "react";
 import ProductsCarts from "../ProductsCards";
 import { CardsType } from "@/types";
@@ -21,11 +13,9 @@ export default function Cards({
   return (
     <FlatList
       data={catalog?.products || allProducts}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={(item, index) => `${item}-${index}`}
       numColumns={2}
-      renderItem={({ item }) => (
-        <ProductsCarts item={item} theme={theme} styles={styles} />
-      )}
+      renderItem={({ item }) => <ProductsCarts item={item} theme={theme} />}
       contentContainerStyle={styles.list}
       onEndReached={fetchProducts}
       onEndReachedThreshold={0.5}

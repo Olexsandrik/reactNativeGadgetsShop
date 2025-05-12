@@ -9,46 +9,81 @@ import {
   TouchableOpacity,
   ScrollView,
   Button,
+  ActivityIndicator,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { useWindowDimensions } from "react-native";
 import { useCatalog } from "@/server/useCatalog";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useAllProduct } from "@/server/useAllProduct";
 import { set } from "react-hook-form";
+import Header from "../Header";
+import Categories from "../Categories";
+import Cards from "../Cards";
 
-export default function ListOfGoods({ navigation }: any) {
-  const { width, height } = useWindowDimensions();
+export default function ListOfGoods() {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   const { catalog, loading, handleGetCategories, setCatalog } = useCatalog(
     `server/getAllCategories`
   );
-  const { allProducts, handleAllProducts, productLoading } =
+  const { allProducts, fetchProducts, productLoading, setAllProducts } =
     useAllProduct("server/products");
 
-  const handlerProduct = (item: any) => {
-    navigation.navigate("ScreenProduct", { item });
-  };
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>("desc");
+  const [activeSource, setActiveSource] = useState<"all" | "catalog">("all");
 
   const handleSmartPhone = async () => {
+    setCatalog([]);
+    setActiveSource("catalog");
     await handleGetCategories(1);
   };
   const handleSmartLaptops = async () => {
+    setCatalog([]);
+    setActiveSource("catalog");
     await handleGetCategories(2);
   };
   const handleSmartAccessories = async () => {
+    setCatalog([]);
+    setActiveSource("catalog");
     await handleGetCategories(3);
   };
   const hanldeAllProducts = async () => {
     setCatalog([]);
-    await handleAllProducts();
+    setActiveSource("all");
+    await fetchProducts();
+  };
+
+  const minMaxPrice = () => {
+    const newOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newOrder);
+
+    if (activeSource === "all") {
+      setAllProducts((prev: any) => {
+        return [...(prev || [])].sort((a: any, b: any) => {
+          return newOrder === "asc" ? a.price - b.price : b.price - a.price;
+        });
+      });
+    }
+    if (activeSource === "catalog") {
+      setCatalog((prev: any) => {
+        const sorted = [...(prev.products || [])].sort((a: any, b: any) => {
+          return newOrder === "asc" ? a.price - b.price : b.price - a.price;
+        });
+
+        return {
+          ...prev,
+          products: sorted,
+        };
+      });
+    }
   };
 
   useEffect(() => {
-    setCatalog([]); 
-    handleAllProducts(); 
+    setCatalog([]);
+
+    fetchProducts();
   }, []);
 
   return (
@@ -66,66 +101,14 @@ export default function ListOfGoods({ navigation }: any) {
           isDarkMode ? styles.darkHeaderWrapper : styles.lightHeaderWrapper,
         ]}
       >
-        <View style={styles.headerContainer}>
-          <View style={styles.logoContainer}>
-            <Image
-              style={styles.logo}
-              source={{
-                uri: "https://sdmntprnortheu.oaiusercontent.com/files/00000000-691c-61f4-878f-aebdef03eade/raw?se=2025-05-11T11%3A57%3A31Z&sp=r&sv=2024-08-04&sr=b&scid=00000000-0000-0000-0000-000000000000&skoid=76024c37-11e2-4c92-aa07-7e519fbe2d0f&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-11T07%3A01%3A04Z&ske=2025-05-12T07%3A01%3A04Z&sks=b&skv=2024-08-04&sig=xkB6/JbEPj7FzRD3f62EG0RgR7cc7%2BBgv4fU/nEr9eo%3D",
-              }}
-            />
-          </View>
+        <Header styles={styles} theme={isDarkMode} minMaxPrice={minMaxPrice} />
 
-          <View style={styles.searchContainer}>
-            <View
-              style={[
-                styles.inputContainer,
-                isDarkMode
-                  ? styles.darkInputContainer
-                  : styles.lightInputContainer,
-              ]}
-            >
-              <Image
-                source={require("../../assets/images/search.png")}
-                style={[
-                  styles.icon,
-                  isDarkMode ? styles.darkIcon : styles.lightIcon,
-                ]}
-                resizeMode="contain"
-              />
-              <TextInput
-                placeholder="Search products..."
-                placeholderTextColor={isDarkMode ? "#a8b5db" : "#6b7280"}
-                style={[
-                  styles.input,
-                  isDarkMode ? styles.darkInput : styles.lightInput,
-                ]}
-              />
-            </View>
-          </View>
-          <TouchableOpacity style={styles.filterButton}>
-            <Text
-              style={[
-                styles.filterText,
-                isDarkMode ? styles.darkFilterText : styles.lightFilterText,
-              ]}
-            >
-              Filter
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView
-          horizontal={true}
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: "space-around",
-          }}
-        >
-          <Button title="All" onPress={hanldeAllProducts} />
-          <Button title="Smartphones" onPress={handleSmartPhone} />
-          <Button title="Laptops" onPress={handleSmartLaptops} />
-          <Button title="Accessories" onPress={handleSmartAccessories} />
-        </ScrollView>
+        <Categories
+          hanldeAllProducts={hanldeAllProducts}
+          handleSmartPhone={handleSmartPhone}
+          handleSmartLaptops={handleSmartLaptops}
+          handleSmartAccessories={handleSmartAccessories}
+        />
       </View>
 
       {loading ? (
@@ -135,46 +118,13 @@ export default function ListOfGoods({ navigation }: any) {
           textStyle={{ color: "#FFF" }}
         />
       ) : (
-        <FlatList
-          data={catalog?.products || allProducts}
-          keyExtractor={(item) => item.id.toString()}
-          numColumns={2}
-          renderItem={({ item }) => (
-            <Pressable onPress={() => handlerProduct(item)}>
-              <View
-                style={[
-                  styles.itemContainer,
-                  { width: (width - 36) / 2 },
-                  isDarkMode
-                    ? styles.darkItemContainer
-                    : styles.lightItemContainer,
-                ]}
-              >
-                <View style={styles.imageContainer}>
-                  <Image source={{ uri: item.imageUrl }} style={styles.image} />
-                </View>
-                <View style={styles.infoContainer}>
-                  <Text
-                    style={[
-                      styles.name,
-                      isDarkMode ? styles.darkText : styles.lightText,
-                    ]}
-                  >
-                    {item.name}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.price,
-                      isDarkMode ? styles.darkPrice : styles.lightPrice,
-                    ]}
-                  >
-                    ${item.price}
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
-          )}
-          contentContainerStyle={styles.list}
+        <Cards
+          catalog={catalog}
+          allProducts={allProducts}
+          theme={isDarkMode}
+          productLoading={productLoading}
+          styles={styles}
+          fetchProducts={fetchProducts}
         />
       )}
     </View>

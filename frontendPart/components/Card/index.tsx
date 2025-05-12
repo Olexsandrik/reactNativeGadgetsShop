@@ -7,8 +7,9 @@ import {
   Dimensions,
 } from "react-native";
 
-export default function Cart({ navigation, route }: any) {
+export default function Card({ navigation, route }: any) {
   const { item } = route.params;
+
   return (
     <TouchableOpacity style={styles.card} activeOpacity={0.9}>
       <View style={styles.imageContainer}>

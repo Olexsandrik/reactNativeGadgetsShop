@@ -74,7 +74,7 @@ router.get("/me", authMiddleware, async (req, res) => {
     },
   });
 
-  console.dir(user, { depth: null, colors: true });
+  // console.dir(user, { depth: null, colors: true });
   if (!user) return res.status(404).json({ message: "User not found" });
 
   res.json(user);

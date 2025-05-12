@@ -28,7 +28,6 @@ export const useCatalog = (mainUrl: string) => {
       }
       const response = await res.json();
       setCatalog(response);
-      console.log(response);
     } catch (err) {
       console.error("Fetch error:", err);
     } finally {

@@ -10,7 +10,6 @@ const CategoryController = {
           products: true,
         },
       });
-      console.log(findAllProductsAndCategories);
 
       res.status(201).json(findAllProductsAndCategories);
     } catch (error) {

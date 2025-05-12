@@ -5,35 +5,46 @@ import { useState } from "react";
 import { error } from "console";
 
 export const useAllProduct = (mainUrl: string) => {
-  const [allProducts, setAllProducts] = useState();
+  const [allProducts, setAllProducts] = useState<any[]>([]);
   const [productLoading, setProductLoading] = useState(false);
 
-  const handleAllProducts = async () => {
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  const LIMIT = 10;
+
+  const fetchProducts = async () => {
+    if (productLoading || !hasMore) return;
+
     setProductLoading(true);
+
     try {
       const token = await AsyncStorage.getItem("token");
-      if (!token) {
-        throw Error("Error token");
-      }
-      const res = await fetch(`${BASE_URL}/${mainUrl}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch products");
-      }
+      const res = await fetch(
+        `${BASE_URL}/${mainUrl}?page=${page}&limit=${LIMIT}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       const response = await res.json();
-      console.log(response);
-      setAllProducts(response);
+
+      setAllProducts((prev) => [...prev, ...response.data]);
+      setPage((prev) => prev + 1);
+
+      if (page >= response.meta.totalPages) {
+        setHasMore(false);
+      }
     } catch (error) {
       console.error(error);
     } finally {
       setProductLoading(false);
     }
   };
-  return { allProducts, handleAllProducts, productLoading };
+
+  return { allProducts, fetchProducts, productLoading, setAllProducts };
 };

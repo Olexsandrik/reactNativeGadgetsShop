@@ -8,9 +8,15 @@ import {
 } from "react-native";
 import React from "react";
 import { HeaderProps } from "@/types";
+import { useForm } from "react-hook-form";
+import Input from "../Input";
 
-
-export default function Header({ theme, minMaxPrice }: HeaderProps) {
+export default function Header({
+  theme,
+  minMaxPrice,
+  control,
+  nameInput,
+}: any) {
   return (
     <>
       <View style={styles.headerContainer}>
@@ -25,7 +31,7 @@ export default function Header({ theme, minMaxPrice }: HeaderProps) {
           <View
             style={[
               styles.inputContainer,
-              theme ? styles.darkInputContainer : styles.lightInputContainer,
+              false ? styles.darkInputContainer : styles.lightInputContainer,
             ]}
           >
             <Image
@@ -33,10 +39,12 @@ export default function Header({ theme, minMaxPrice }: HeaderProps) {
               style={[styles.icon, theme ? styles.darkIcon : styles.lightIcon]}
               resizeMode="contain"
             />
-            <TextInput
+
+            <Input
+              control={control}
               placeholder="Search products..."
-              placeholderTextColor={theme ? "#a8b5db" : "#6b7280"}
-              style={[
+              name={nameInput}
+              styles={[
                 styles.input,
                 theme ? styles.darkInput : styles.lightInput,
               ]}

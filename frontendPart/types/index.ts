@@ -70,17 +70,19 @@ export type ProductsResponse = {
 export type CategoryResponse = {
   id: number;
   name: string;
-  products: Products[] | null;
+  products: Products[] | null | undefined;
 };
 //
 
 export type CardsType = {
-  catalog: CategoryResponse | null;
+  catalog?: CategoryResponse | null;
   allProducts: Products[];
   theme: boolean;
   productLoading: boolean;
   fetchProducts: () => void;
+  activeSource?: "all" | "catalog";
 };
+
 export type CategoriesProps = {
   hanldeAllProducts: () => void;
   handleSmartPhone: () => void;
@@ -89,6 +91,12 @@ export type CategoriesProps = {
 };
 export type PropsNavigationProducts = {
   ScreenProducts: undefined;
+
+  ScreenProduct: { item: Products };
+};
+
+export type PropsNavigationProductsSearch = {
+  SearchProducts: undefined;
   ScreenProduct: { item: Products };
 };
 export type ProductCartProps = {
@@ -117,4 +125,5 @@ export type User = {
 export type HeaderProps = {
   minMaxPrice: () => void;
   theme: boolean;
+  filterProductsByName: (searchValue: string) => void;
 };

@@ -1,7 +1,8 @@
-import { View, FlatList, ActivityIndicator, StyleSheet } from "react-native";
-import React from "react";
-import ProductsCarts from "../ProductsCards";
 import { CardsType } from "@/types";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+
+import ProductsCarts from "../ProductsCards";
+import { COLORS } from "@/constants";
 
 export default function Cards({
   catalog,
@@ -9,11 +10,29 @@ export default function Cards({
   theme,
   productLoading,
   fetchProducts,
+  activeSource,
 }: CardsType) {
+  let data = null;
+
+  if (activeSource === "all") {
+    data = allProducts;
+  }
+  if (activeSource === "catalog") {
+    data = catalog?.products;
+  }
+
+  if (!data || productLoading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#888" />
+      </View>
+    );
+  }
+
   return (
     <FlatList
-      data={catalog?.products || allProducts}
-      keyExtractor={(item, index) => `${item}-${index}`}
+      data={data}
+      keyExtractor={(item, index) => `${item.id}-${index}`}
       numColumns={2}
       renderItem={({ item }) => <ProductsCarts item={item} theme={theme} />}
       contentContainerStyle={styles.list}
@@ -34,5 +53,13 @@ const styles = StyleSheet.create({
   list: {
     padding: 10,
     alignItems: "center",
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 40,
+    minHeight: "100%",
+    backgroundColor: COLORS.appBackground,
   },
 });

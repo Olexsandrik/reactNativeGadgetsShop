@@ -1,14 +1,13 @@
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Text } from "react-native";
+
 import React from "react";
-import ListOfGoods from "@/components/ListOfGoods";
+
 import { FontAwesome } from "@expo/vector-icons";
 import { COLORS } from "@/constants";
 import Orders from "@/components/Orders";
 import Settings from "@/components/Settings";
-import Search from "@/components/Search";
 import ScreenProductNavigation from "../ScreenProductNavigation";
+import SearchProductNavigation from "../SearchProductNavigation";
 const Tab = createBottomTabNavigator();
 export default function NavigationTab() {
   return (
@@ -36,7 +35,7 @@ export default function NavigationTab() {
 
       <Tab.Screen
         name="Search"
-        component={Search}
+        component={SearchProductNavigation}
         options={{
           tabBarLabel: "Search",
           tabBarIcon: ({ color, size }) => {

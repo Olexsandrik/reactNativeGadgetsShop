@@ -9,7 +9,8 @@ export default function Input({
   name,
   control,
   placeholder,
-}: InputProps) {
+  onChangeText,
+}: InputProps & { onChangeText?: (text: string) => void }) {
   return (
     <Controller
       name={name}
@@ -22,7 +23,10 @@ export default function Input({
           style={styles}
           placeholder={placeholder}
           value={value}
-          onChangeText={onChange}
+          onChangeText={(text) => {
+            onChange(text);
+            onChangeText?.(text);
+          }}
           placeholderTextColor="#666"
         />
       )}

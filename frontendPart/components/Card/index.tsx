@@ -50,8 +50,6 @@ export default function Card({
     reset();
   };
 
-  console.log(commentData);
-
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity style={styles.card} activeOpacity={0.9}>

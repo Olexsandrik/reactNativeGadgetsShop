@@ -4,6 +4,7 @@ const prisma = require("../../prisma/prisma");
 const UserController = require("../Controllers/user-contoller");
 const ProductController = require("../Controllers/product-controller");
 const CategoryController = require("../Controllers/category-controller");
+const OrderController = require("../Controllers/order-controller");
 var router = express.Router();
 const authMiddleware = require("../middleware/middleware");
 
@@ -38,7 +39,12 @@ router.get(
   CategoryController.getAllCategory
 );
 
-//
+//Categories
+
+//Orders
+
+router.post("/orders", authMiddleware, OrderController.orderCreate);
+//Orders
 
 router.get("/me", authMiddleware, async (req, res) => {
   const user = await prisma.user.findUnique({

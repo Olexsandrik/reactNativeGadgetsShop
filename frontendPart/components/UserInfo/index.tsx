@@ -8,6 +8,7 @@ export default function UserInfo() {
   const { user } = useAuthContext();
   const { theme } = useThemeContext();
 
+  console.log(user);
   console.log(theme);
   return (
     <View style={styles.container}>
@@ -67,7 +68,8 @@ export default function UserInfo() {
         {user.orders?.map((order: any) => (
           <View key={order.id} style={styles.orderContainer}>
             <Text style={styles.orderTitle}>Order:</Text>
-            {order.items?.map((item: any, index: number) => (
+            <Text> {order.totalPrice}</Text>
+            {order.items?.slice(7).map((item: any, index: number) => (
               <View
                 key={index}
                 style={[
@@ -114,7 +116,7 @@ export default function UserInfo() {
                         color: theme ? COLORS.grey300 : COLORS.appBackground,
                       }}
                     >
-                      0
+                      {item.quantity}
                     </Text>
                   </View>
                 </View>

@@ -13,12 +13,16 @@ import {
 } from "react-native";
 import Input from "../Input";
 import AuthContext, { useAuthContext } from "../Context/AuthContext";
+import { usePostOrders } from "@/server/usePostOrders";
+import { useRemoveOrderItem } from "@/server/useRemoveOrderItem";
 
 export default function Card({
   route,
   navigation,
 }: NativeStackScreenProps<PropsNavigationProducts, "ScreenProduct">) {
   const { item } = route.params;
+  const [quantity, setQuantity] = useState(1);
+  const [showRemoveButton, setShowRemoveButton] = useState(true);
 
   const { user } = useAuthContext();
   const {
@@ -34,8 +38,21 @@ export default function Card({
   });
   const [commentData, setCommentData] = useState<any>([]);
 
+  const { handleAddOrder, orders, loading, setOrders } =
+    usePostOrders("server/orders");
+
+  const { handleRemoveOrderItem } = useRemoveOrderItem(
+    `server/product/${item.id}/order/${orders}`
+  );
+
   const handleAddToCart = () => {
-    console.log("Add to cart:", item);
+    handleAddOrder({ productId: item.id, quantity: quantity });
+    setShowRemoveButton(false);
+  };
+
+  const handleRemoveFromCart = () => {
+    handleRemoveOrderItem();
+    setShowRemoveButton(true);
   };
 
   const handleAddComment = (data: any) => {
@@ -48,6 +65,16 @@ export default function Card({
     });
 
     reset();
+  };
+
+  const incrementQuantity = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
   };
 
   return (
@@ -69,13 +96,44 @@ export default function Card({
             {item.description}
           </Text>
 
-          <TouchableOpacity
-            style={styles.buyButton}
-            onPress={handleAddToCart}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.buyButtonText}>Buy Now</Text>
-          </TouchableOpacity>
+          <View style={styles.quantityContainer}>
+            <Text style={styles.quantityLabel}>Quantity:</Text>
+            <View style={styles.quantityControls}>
+              <TouchableOpacity
+                style={styles.quantityButton}
+                onPress={decrementQuantity}
+              >
+                <Text style={styles.quantityButtonText}>-</Text>
+              </TouchableOpacity>
+              <Text style={styles.quantityValue}>{quantity}</Text>
+              <TouchableOpacity
+                style={styles.quantityButton}
+                onPress={incrementQuantity}
+              >
+                <Text style={styles.quantityButtonText}>+</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {showRemoveButton && (
+            <TouchableOpacity
+              style={styles.buyButton}
+              onPress={handleAddToCart}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.buyButtonText}>Buy Now</Text>
+            </TouchableOpacity>
+          )}
+
+          {!showRemoveButton && (
+            <TouchableOpacity
+              style={styles.removeButton}
+              onPress={handleRemoveFromCart}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.removeButtonText}>Remove</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </TouchableOpacity>
 
@@ -183,6 +241,42 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginBottom: 16,
   },
+  quantityContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  quantityLabel: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    marginRight: 10,
+  },
+  quantityControls: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#333333",
+    borderRadius: 8,
+  },
+  quantityButton: {
+    width: 36,
+    height: 36,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#444444",
+    borderRadius: 8,
+  },
+  quantityButtonText: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  quantityValue: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    paddingHorizontal: 16,
+    minWidth: 40,
+    textAlign: "center",
+  },
   buyButton: {
     backgroundColor: "#5856D6",
     borderRadius: 8,
@@ -194,6 +288,21 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   buyButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  removeButton: {
+    backgroundColor: "#D65856",
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 8,
+  },
+  removeButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",

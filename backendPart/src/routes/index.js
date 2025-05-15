@@ -44,6 +44,13 @@ router.get(
 //Orders
 
 router.post("/orders", authMiddleware, OrderController.orderCreate);
+router.delete(
+  "/product/:id/order/:ordId",
+  authMiddleware,
+  OrderController.removeOrderItem
+);
+
+router.get("/orders/:id", authMiddleware, OrderController.getAllOrderItem);
 //Orders
 
 router.get("/me", authMiddleware, async (req, res) => {

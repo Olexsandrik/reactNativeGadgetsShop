@@ -13,7 +13,6 @@ import { LoginProps, PropsLogin } from "@/types";
 import { useForm } from "react-hook-form";
 import Input from "../Input";
 import { useLogin } from "@/server/useLogin";
-import { useAuthContext } from "../Context/AuthContext";
 
 export default function Login({ route, navigation }: PropsLogin) {
   const handleRegister = () => {

@@ -8,12 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import {
-  ProductCartProps,
-  Products,
-  ProductsProps,
-  PropsNavigationProducts,
-} from "@/types";
+import { ProductCartProps, Products, ProductsProps } from "@/types";
 
 export default function ProductsCarts({ item, theme }: ProductCartProps) {
   const navigation = useNavigation<ProductsProps>();

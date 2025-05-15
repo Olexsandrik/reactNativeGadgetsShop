@@ -1,3 +1,4 @@
+import { useGetAllOrderItem } from "@/server/useGetAllOrderItem";
 import React from "react";
 import {
   View,
@@ -9,41 +10,7 @@ import {
 } from "react-native";
 
 export default function Orders() {
-  const orders = [
-    {
-      id: "1",
-      orderNumber: "#ORD-2025-001",
-      date: "15 May 2025",
-      items: 3,
-      total: "$299.99",
-      status: "Delivered",
-    },
-    {
-      id: "2",
-      orderNumber: "#ORD-2025-002",
-      date: "10 May 2025",
-      items: 1,
-      total: "$149.50",
-      status: "Processing",
-    },
-    {
-      id: "3",
-      orderNumber: "#ORD-2025-003",
-      date: "5 May 2025",
-      items: 2,
-      total: "$89.99",
-      status: "Shipped",
-    },
-    {
-      id: "4",
-      orderNumber: "#ORD-2025-004",
-      date: "1 May 2025",
-      items: 4,
-      total: "$459.95",
-      status: "Delivered",
-    },
-  ];
-
+  const { allOrderItem } = useGetAllOrderItem(`server/orders/${17}`, 17);
   const renderOrderItem = ({ item }: any) => (
     <TouchableOpacity style={styles.orderItem}>
       <View style={styles.orderHeader}>
@@ -52,7 +19,7 @@ export default function Orders() {
       </View>
 
       <View style={styles.orderDetails}>
-        <Text style={styles.orderDate}>{item.date}</Text>
+        <Text style={styles.orderDate}>{item.product.data}</Text>
         <Text style={styles.orderItemCount}>
           {item.items} {item.items === 1 ? "item" : "items"}
         </Text>
@@ -68,14 +35,14 @@ export default function Orders() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {orders.length === 0 ? (
+        {allOrderItem.length === 0 ? (
           <View style={styles.emptyState}>
             <Text style={styles.emptyText}>No orders yet</Text>
           </View>
         ) : (
           <FlatList
-            data={orders}
-            keyExtractor={(item) => item.id}
+            data={allOrderItem}
+            keyExtractor={(item: any) => item.id}
             renderItem={renderOrderItem}
             contentContainerStyle={styles.ordersList}
           />

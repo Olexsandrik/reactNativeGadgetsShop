@@ -1,12 +1,8 @@
 import { BASE_URL } from "@/constants";
+import { DataOrder } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { useState } from "react";
 
-type DataOrder = {
-  productId: number;
-  quantity: number;
-};
 export const usePostOrders = (mainUrl: string) => {
   const [orders, setOrders] = useState();
   const [loading, setLoading] = useState(false);

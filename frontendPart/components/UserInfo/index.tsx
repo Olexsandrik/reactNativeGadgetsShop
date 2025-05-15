@@ -8,8 +8,6 @@ export default function UserInfo() {
   const { user } = useAuthContext();
   const { theme } = useThemeContext();
 
-  console.log(user);
-  console.log(theme);
   return (
     <View style={styles.container}>
       <View

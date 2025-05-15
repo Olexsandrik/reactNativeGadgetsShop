@@ -127,3 +127,15 @@ export type HeaderProps = {
   theme: boolean;
   filterProductsByName: (searchValue: string) => void;
 };
+
+//orders
+export type DataOrder = {
+  productId: number;
+  quantity: number;
+};
+export type OrderItem = {
+  id: number;
+  quantity: number;
+  productId: number;
+  product: Products;
+};

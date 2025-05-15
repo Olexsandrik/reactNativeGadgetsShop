@@ -61,29 +61,6 @@ router.get("/me", authMiddleware, async (req, res) => {
       name: true,
       email: true,
       createdAt: true,
-      orders: {
-        select: {
-          id: true,
-          totalPrice: true,
-          status: true,
-          createdAt: true,
-
-          items: {
-            select: {
-              id: true,
-              quantity: true,
-              product: {
-                select: {
-                  id: true,
-                  name: true,
-                  imageUrl: true,
-                  price: true,
-                },
-              },
-            },
-          },
-        },
-      },
     },
   });
 

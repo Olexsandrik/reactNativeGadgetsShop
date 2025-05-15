@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 
 import { BASE_URL } from "@/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { OrderItem } from "@/types";
 
 export const useGetAllOrderItem = (mainUrl: string, orderId: number) => {
-  const [allOrderItem, setAllOrderItem] = useState<any>([]);
+  const [allOrderItem, setAllOrderItem] = useState<OrderItem[]>([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -22,6 +23,8 @@ export const useGetAllOrderItem = (mainUrl: string, orderId: number) => {
 
         const res = await response.json();
         setAllOrderItem(res);
+
+        console.log(allOrderItem);
       } catch (e) {
         console.error("Failed to fetch order items:", e);
       } finally {

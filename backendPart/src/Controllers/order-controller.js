@@ -68,6 +68,12 @@ const OrderController = {
 
       const findAllOrderItem = await prisma.orderItem.findMany({
         where: { orderId },
+        select: {
+          id: true,
+          quantity: true,
+          productId: true,
+          product: true,
+        },
       });
 
       res.status(200).json(findAllOrderItem);

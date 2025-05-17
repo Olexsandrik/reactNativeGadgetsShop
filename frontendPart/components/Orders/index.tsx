@@ -1,35 +1,17 @@
 import { useGetAllOrderItem } from "@/server/useGetAllOrderItem";
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { usePostOrders } from "@/server/usePostOrders";
+import { OrderItem } from "@/types";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, SafeAreaView, FlatList } from "react-native";
+import OrdersCard from "../OrdersCards";
+import { useOrderItemContext } from "../Context/OrderContextProvider";
 
 export default function Orders() {
-  const { allOrderItem } = useGetAllOrderItem(`server/orders/${17}`, 17);
-  const renderOrderItem = ({ item }: any) => (
-    <TouchableOpacity style={styles.orderItem}>
-      <View style={styles.orderHeader}>
-        <Text style={styles.orderNumber}>{item.orderNumber}</Text>
-        <Text style={styles.orderStatus}>{item.status}</Text>
-      </View>
+  const { orderData }: any = useOrderItemContext();
 
-      <View style={styles.orderDetails}>
-        <Text style={styles.orderDate}>{item.product.data}</Text>
-        <Text style={styles.orderItemCount}>
-          {item.items} {item.items === 1 ? "item" : "items"}
-        </Text>
-      </View>
-
-      <View style={styles.orderFooter}>
-        <Text style={styles.orderTotalLabel}>Total:</Text>
-        <Text style={styles.orderTotal}>{item.total}</Text>
-      </View>
-    </TouchableOpacity>
+  const { allOrderItem, setAllOrderItem } = useGetAllOrderItem(
+    `server/orders/${orderData?.orderId}`,
+    orderData?.productId
   );
 
   return (
@@ -42,8 +24,10 @@ export default function Orders() {
         ) : (
           <FlatList
             data={allOrderItem}
-            keyExtractor={(item: any) => item.id}
-            renderItem={renderOrderItem}
+            keyExtractor={(item: OrderItem) => item.id.toString()}
+            renderItem={({ item }) => (
+              <OrdersCard item={item} setAllOrderItem={setAllOrderItem} />
+            )}
             contentContainerStyle={styles.ordersList}
           />
         )}

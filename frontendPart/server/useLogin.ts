@@ -8,6 +8,7 @@ export const useLogin = (mainUrl: string) => {
   const { login } = useAuthContext();
   const hanlderLogin = async (loginData: LoginProps) => {
     setLoading(true);
+
     try {
       const response = await fetch(`${BASE_URL}/${mainUrl}`, {
         method: "POST",

@@ -4,7 +4,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 
 export const usePostOrders = (mainUrl: string) => {
-  const [orders, setOrders] = useState();
+  const [orderInfo, setOrderInfo] = useState<{
+    orderId: number;
+    productId: number;
+  }>();
   const [loading, setLoading] = useState(false);
 
   const handleAddOrder = async (data: DataOrder) => {
@@ -23,18 +26,21 @@ export const usePostOrders = (mainUrl: string) => {
         body: JSON.stringify(data),
       });
 
-      console.log(data);
-
       if (!response.ok) {
         throw new Error("Orders failed");
       }
       const res = await response.json();
 
-      setOrders(res.orderId);
-      console.log(orders);
+      const productIdAndOrderId = {
+        orderId: res.orderItem.orderId,
+        productId: res.orderItem.productId,
+      };
+
+      setOrderInfo(productIdAndOrderId);
+      return productIdAndOrderId;
     } catch (error) {
       console.error(error);
     }
   };
-  return { handleAddOrder, orders, loading, setOrders };
+  return { handleAddOrder, orderInfo, loading };
 };

@@ -4,12 +4,16 @@ import { BASE_URL } from "@/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { OrderItem } from "@/types";
 
-export const useGetAllOrderItem = (mainUrl: string, orderId: number) => {
+export const useGetAllOrderItem = (
+  mainUrl: string,
+  prouctId: number | undefined
+) => {
   const [allOrderItem, setAllOrderItem] = useState<OrderItem[]>([]);
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!prouctId) return;
     (async () => {
       setLoading(true);
       try {
@@ -22,16 +26,15 @@ export const useGetAllOrderItem = (mainUrl: string, orderId: number) => {
         });
 
         const res = await response.json();
-        setAllOrderItem(res);
 
-        console.log(allOrderItem);
+        setAllOrderItem(res);
       } catch (e) {
         console.error("Failed to fetch order items:", e);
       } finally {
         setLoading(false);
       }
     })();
-  }, [orderId]);
+  }, [prouctId]);
 
-  return { allOrderItem, loading };
+  return { allOrderItem, loading, setAllOrderItem };
 };

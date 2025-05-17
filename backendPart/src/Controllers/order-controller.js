@@ -84,6 +84,21 @@ const OrderController = {
         .json({ message: "Server error while get all order item" });
     }
   },
+  getAllOrdersItems: async (req, res) => {
+    try {
+      const item = await prisma.orderItem.findMany({
+        include: {
+          product: true,
+          order: true,
+        },
+      });
+
+      res.json(item);
+    } catch (error) {
+      console.error("Order input error:", error);
+      res.status(500).json({ message: "Server error while creating order" });
+    }
+  },
   removeOrderItem: async (req, res) => {
     try {
       const { id, ordId } = req.params;

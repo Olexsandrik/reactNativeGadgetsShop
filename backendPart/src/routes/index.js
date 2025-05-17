@@ -18,6 +18,7 @@ router.get("/profile", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 // auth
+
 router.post("/register", UserController.register);
 
 router.post("/login", UserController.login);
@@ -51,6 +52,7 @@ router.delete(
 );
 
 router.get("/orders/:id", authMiddleware, OrderController.getAllOrderItem);
+
 //Orders
 
 router.get("/me", authMiddleware, async (req, res) => {
@@ -61,10 +63,15 @@ router.get("/me", authMiddleware, async (req, res) => {
       name: true,
       email: true,
       createdAt: true,
+      orders: {
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
-  // console.dir(user, { depth: null, colors: true });
+  console.dir(user, { depth: null, colors: true });
   if (!user) return res.status(404).json({ message: "User not found" });
 
   res.json(user);

@@ -1,16 +1,18 @@
-import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 
 import ThemeProvider from "./components/Context";
 
 import RootNavigator from "./components/RootNavigator";
-import AuthNavigation from "./pages/AuthNavigation";
+
 import AuthContext from "./components/Context/AuthContext";
+import OrderContextProvider from "./components/Context/OrderContextProvider";
 export default function App() {
   return (
     <AuthContext>
       <ThemeProvider>
-        <RootNavigator />
+        <OrderContextProvider>
+          <RootNavigator />
+        </OrderContextProvider>
       </ThemeProvider>
     </AuthContext>
   );

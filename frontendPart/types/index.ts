@@ -35,6 +35,10 @@ export type LoginProps = {
   password: string;
 };
 
+export type OrdersCardProps = {
+  item: OrderItem;
+  setAllOrderItem: React.Dispatch<React.SetStateAction<OrderItem[]>>;
+};
 //Products&Categories
 export type Products = {
   id: number;

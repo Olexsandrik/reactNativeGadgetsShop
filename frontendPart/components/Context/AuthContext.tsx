@@ -13,6 +13,8 @@ export default function AuthContext({ children }: PropsChildren) {
   const login = async ({ token, userData }: LoginPropsLogin) => {
     await AsyncStorage.setItem("token", token);
     setUser(userData);
+
+    console.log(token);
   };
 
   const logout = async () => {
@@ -54,6 +56,7 @@ export default function AuthContext({ children }: PropsChildren) {
         login,
         logout,
         loading,
+        checkToken,
       }}
     >
       {children}

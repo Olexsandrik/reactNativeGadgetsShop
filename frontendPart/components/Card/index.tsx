@@ -9,16 +9,15 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  TextInput,
 } from "react-native";
 import Input from "../Input";
-import AuthContext, { useAuthContext } from "../Context/AuthContext";
+import { useAuthContext } from "../Context/AuthContext";
 import { usePostOrders } from "@/server/usePostOrders";
 import { useRemoveOrderItem } from "@/server/useRemoveOrderItem";
+import { useOrderItemContext } from "../Context/OrderContextProvider";
 
 export default function Card({
   route,
-  navigation,
 }: NativeStackScreenProps<PropsNavigationProducts, "ScreenProduct">) {
   const { item } = route.params;
   const [quantity, setQuantity] = useState(1);
@@ -37,16 +36,20 @@ export default function Card({
     },
   });
   const [commentData, setCommentData] = useState<any>([]);
-
-  const { handleAddOrder, orders, loading, setOrders } =
-    usePostOrders("server/orders");
+  const { setOrderData }: any = useOrderItemContext();
+  const { handleAddOrder, orderInfo, loading } = usePostOrders("server/orders");
 
   const { handleRemoveOrderItem } = useRemoveOrderItem(
-    `server/product/${item.id}/order/${orders}`
+    `server/product/${item.id}/order/${orderInfo?.orderId}`
   );
 
-  const handleAddToCart = () => {
-    handleAddOrder({ productId: item.id, quantity: quantity });
+  const handleAddToCart = async () => {
+    const actualData = await handleAddOrder({
+      productId: item.id,
+      quantity: quantity,
+    });
+    setOrderData(actualData);
+
     setShowRemoveButton(false);
   };
 

@@ -8,6 +8,8 @@ import Orders from "@/components/Orders";
 import Settings from "@/components/Settings";
 import ScreenProductNavigation from "../ScreenProductNavigation";
 import SearchProductNavigation from "../SearchProductNavigation";
+import Location from "@/components/LocationMap";
+import LocationMap from "@/components/LocationMap";
 const Tab = createBottomTabNavigator();
 export default function NavigationTab() {
   return (
@@ -53,6 +55,16 @@ export default function NavigationTab() {
             return (
               <FontAwesome name="shopping-cart" color={color} size={size} />
             );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="location"
+        component={LocationMap}
+        options={{
+          tabBarLabel: "Location",
+          tabBarIcon: ({ color, size }) => {
+            return <FontAwesome name="map" color={color} size={size} />;
           },
         }}
       />

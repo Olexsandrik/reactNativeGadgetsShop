@@ -18,7 +18,7 @@ const parkCoords = {
 };
 
 const ZOOM_LEVEL = 18;
-const ANIMATION_DURATION = 3000;
+const ANIMATION_DURATION = 2000;
 
 export default function LocationMap() {
   const [index, setIndex] = useState(0);
@@ -39,12 +39,14 @@ export default function LocationMap() {
     },
   ]);
   const handleNext = () => {
+    const newIndex = (index + 1) % locations.length;
+    setIndex(newIndex);
     if (mapsRef.current) {
       mapsRef.current.animateCamera(
         {
           center: {
-            latitude: locations[index].latitude,
-            longitude: locations[index].longitude,
+            latitude: locations[newIndex].latitude,
+            longitude: locations[newIndex].longitude,
           },
           zoom: ZOOM_LEVEL,
         },
@@ -55,12 +57,14 @@ export default function LocationMap() {
     }
   };
   const handlePrev = () => {
+    const newIndex = (index - 1 + locations.length) % locations.length;
+    setIndex(newIndex);
     if (mapsRef.current) {
       mapsRef.current.animateCamera(
         {
           center: {
-            latitude: locations[index].latitude,
-            longitude: locations[index].longitude,
+            latitude: locations[newIndex].latitude,
+            longitude: locations[newIndex].longitude,
           },
           zoom: ZOOM_LEVEL,
         },
@@ -117,11 +121,11 @@ export default function LocationMap() {
       </MapView>
 
       <View style={styles.btnContainer}>
-        <Pressable onPress={handleNext}>
-          <Text>Next</Text>
+        <Pressable style={styles.btn} onPress={handlePrev}>
+          <Text style={styles.btnText}>Prev</Text>
         </Pressable>
-        <Pressable onPress={handlePrev}>
-          <Text>Prev</Text>
+        <Pressable style={styles.btn} onPress={handleNext}>
+          <Text style={styles.btnText}>Next</Text>
         </Pressable>
       </View>
     </>
@@ -136,13 +140,29 @@ const styles = StyleSheet.create({
   },
 
   btnContainer: {
+    position: "absolute",
+    bottom: "5%",
+    right: "30%",
+
     flexDirection: "row",
-    justifyContent: "space-around",
-    height: "5%",
-    backgroundColor: "white",
+
+    height: "4%",
   },
 
   btnStyled: {
     width: "10%",
+  },
+  btn: {
+    backgroundColor: "#f0f0f0",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+    marginLeft: 50,
+  },
+  btnText: {
+    fontSize: 14,
+    color: "#333",
+    fontWeight: "500",
   },
 });

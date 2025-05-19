@@ -62,6 +62,7 @@ export default function NavigationTab() {
         name="location"
         component={LocationMap}
         options={{
+          headerShown: false,
           tabBarLabel: "Location",
           tabBarIcon: ({ color, size }) => {
             return <FontAwesome name="map" color={color} size={size} />;

@@ -25,7 +25,10 @@ export default function LocationMap() {
     },
   ]);
 
-  const [currentLocation, setCurrentLocation] = useState();
+  const [currentLocation, setCurrentLocation] =
+    useState<Location.LocationObject>();
+
+  const [open, setOpen] = useState(false);
   const handleNext = () => {
     const newIndex = (index + 1) % locations.length;
     setIndex(newIndex);
@@ -63,6 +66,10 @@ export default function LocationMap() {
     }
   };
 
+  const handleFind = () => {
+    setOpen(!open);
+  };
+
   useEffect(() => {
     (async () => {
       const location = await Location.geocodeAsync("ivano-frankivsk");
@@ -96,42 +103,49 @@ export default function LocationMap() {
 
       let location = await Location.getCurrentPositionAsync({});
 
-      if (mapsRef.current) {
-        mapsRef.current.animateCamera(
-          {
-            center: {
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            },
-
-            zoom: ZOOM_LEVEL,
-          },
-          { duration: ANIMATION_DURATION }
-        );
-      }
+      setCurrentLocation(location);
     })();
   }, []);
   return (
     <>
-      <MapView
-        ref={mapsRef}
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        showsUserLocation={true}
-        showsMyLocationButton={true}
-      >
-        {locations.map((item) => {
-          return (
-            <Marker
-              key={item.latitude}
-              coordinate={{
-                latitude: item.latitude,
-                longitude: item.longitude,
-              }}
-            />
-          );
-        })}
-      </MapView>
+      {currentLocation && locations && (
+        <MapView
+          ref={mapsRef}
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          showsUserLocation={true}
+          showsMyLocationButton={true}
+        >
+          <>
+            {locations.map((item) => {
+              return (
+                <React.Fragment key={item.latitude}>
+                  <Marker
+                    coordinate={{
+                      latitude: item.latitude,
+                      longitude: item.longitude,
+                    }}
+                  />
+
+                  {open && (
+                    <Polyline
+                      coordinates={[
+                        ...locations,
+                        {
+                          latitude: currentLocation.coords.latitude,
+                          longitude: currentLocation.coords.longitude,
+                        },
+                      ]}
+                      strokeWidth={4}
+                      strokeColor="blue"
+                    />
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </>
+        </MapView>
+      )}
 
       <View style={styles.btnContainer}>
         <Pressable style={styles.btn} onPress={handlePrev}>
@@ -139,6 +153,12 @@ export default function LocationMap() {
         </Pressable>
         <Pressable style={styles.btn} onPress={handleNext}>
           <Text style={styles.btnText}>Next</Text>
+        </Pressable>
+
+        <Pressable style={styles.btn}>
+          <Text style={styles.btnText} onPress={handleFind}>
+            Find
+          </Text>
         </Pressable>
       </View>
     </>
@@ -155,7 +175,7 @@ const styles = StyleSheet.create({
   btnContainer: {
     position: "absolute",
     bottom: "5%",
-    right: "30%",
+    right: "20%",
 
     flexDirection: "row",
 
@@ -179,22 +199,3 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 });
-
-// <Marker
-//         coordinate={{
-//           latitude: parkCoords.latitude,
-//           longitude: parkCoords.longitude,
-//         }}
-//       />
-//       <Marker
-//         coordinate={{
-//           latitude: centerCoords.latitude,
-//           longitude: centerCoords.longitude,
-//         }}
-//       />
-//       <Marker
-//         coordinate={{
-//           latitude: pnuCoords.latitude,
-//           longitude: pnuCoords.longitude,
-//         }}
-//       />

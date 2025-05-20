@@ -2,20 +2,6 @@ import { View, Text, StyleSheet, Button, Pressable } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
-const pnuCoords = {
-  latitude: 48.922268,
-  longitude: 24.711026,
-};
-
-const centerCoords = {
-  latitude: 48.92263,
-  longitude: 24.71052,
-};
-
-const parkCoords = {
-  latitude: 48.918453,
-  longitude: 24.714305,
-};
 
 const ZOOM_LEVEL = 18;
 const ANIMATION_DURATION = 2000;
@@ -38,6 +24,8 @@ export default function LocationMap() {
       longitude: 24.714305,
     },
   ]);
+
+  const [currentLocation, setCurrentLocation] = useState();
   const handleNext = () => {
     const newIndex = (index + 1) % locations.length;
     setIndex(newIndex);
@@ -97,27 +85,52 @@ export default function LocationMap() {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+
+      if (status !== "granted") {
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+
+      if (mapsRef.current) {
+        mapsRef.current.animateCamera(
+          {
+            center: {
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            },
+
+            zoom: ZOOM_LEVEL,
+          },
+          { duration: ANIMATION_DURATION }
+        );
+      }
+    })();
+  }, []);
   return (
     <>
-      <MapView ref={mapsRef} provider={PROVIDER_GOOGLE} style={styles.map}>
-        <Marker
-          coordinate={{
-            latitude: parkCoords.latitude,
-            longitude: parkCoords.longitude,
-          }}
-        />
-        <Marker
-          coordinate={{
-            latitude: centerCoords.latitude,
-            longitude: centerCoords.longitude,
-          }}
-        />
-        <Marker
-          coordinate={{
-            latitude: pnuCoords.latitude,
-            longitude: pnuCoords.longitude,
-          }}
-        />
+      <MapView
+        ref={mapsRef}
+        provider={PROVIDER_GOOGLE}
+        style={styles.map}
+        showsUserLocation={true}
+        showsMyLocationButton={true}
+      >
+        {locations.map((item) => {
+          return (
+            <Marker
+              key={item.latitude}
+              coordinate={{
+                latitude: item.latitude,
+                longitude: item.longitude,
+              }}
+            />
+          );
+        })}
       </MapView>
 
       <View style={styles.btnContainer}>
@@ -166,3 +179,22 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 });
+
+// <Marker
+//         coordinate={{
+//           latitude: parkCoords.latitude,
+//           longitude: parkCoords.longitude,
+//         }}
+//       />
+//       <Marker
+//         coordinate={{
+//           latitude: centerCoords.latitude,
+//           longitude: centerCoords.longitude,
+//         }}
+//       />
+//       <Marker
+//         coordinate={{
+//           latitude: pnuCoords.latitude,
+//           longitude: pnuCoords.longitude,
+//         }}
+//       />

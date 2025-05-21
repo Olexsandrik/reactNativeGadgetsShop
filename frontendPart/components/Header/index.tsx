@@ -18,51 +18,34 @@ export default function Header({
   nameInput,
 }: any) {
   return (
-    <>
-      <View style={styles.headerContainer}>
-        <View style={styles.logoContainer}>
+    <View style={styles.headerContainer}>
+      <View style={styles.logoContainer}>
+        <Image
+          style={styles.logo}
+          source={require("../../assets/logo/logo.png")}
+        />
+      </View>
+
+      <View style={styles.searchContainer}>
+        <View style={styles.inputContainer}>
           <Image
-            style={styles.logo}
-            source={require("../../assets/logo/logo.png")}
+            source={require("../../assets/images/search.png")}
+            style={styles.icon}
+            resizeMode="contain"
+          />
+          <Input
+            control={control}
+            placeholder="Search products..."
+            name={nameInput}
+            styles={styles.input}
           />
         </View>
-
-        <View style={styles.searchContainer}>
-          <View
-            style={[
-              styles.inputContainer,
-              false ? styles.darkInputContainer : styles.lightInputContainer,
-            ]}
-          >
-            <Image
-              source={require("../../assets/images/search.png")}
-              style={[styles.icon, theme ? styles.darkIcon : styles.lightIcon]}
-              resizeMode="contain"
-            />
-
-            <Input
-              control={control}
-              placeholder="Search products..."
-              name={nameInput}
-              styles={[
-                styles.input,
-                theme ? styles.darkInput : styles.lightInput,
-              ]}
-            />
-          </View>
-        </View>
-        <TouchableOpacity style={styles.filterButton} onPress={minMaxPrice}>
-          <Text
-            style={[
-              styles.filterText,
-              theme ? styles.darkFilterText : styles.lightFilterText,
-            ]}
-          >
-            Filter
-          </Text>
-        </TouchableOpacity>
       </View>
-    </>
+
+      <TouchableOpacity style={styles.filterButton} onPress={minMaxPrice}>
+        <Text style={styles.filterText}>Filter</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 

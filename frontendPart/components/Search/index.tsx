@@ -16,6 +16,8 @@ import Header from "../Header";
 import Cards from "../Cards";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useForm } from "react-hook-form";
+import { COLORS } from "@/constants";
+import { useThemeContext } from "../Context";
 
 export default function Search() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>("desc");
@@ -25,9 +27,10 @@ export default function Search() {
     `server/getAllCategories`
   );
 
-  const [theme, setTheme] = useState(false);
+  const { theme } = useThemeContext();
   const { allProducts, fetchProducts, productLoading, setAllProducts } =
     useAllProduct("server/products");
+
   const handleSmartPhone = async () => {
     setCatalog(null);
     setActiveSource("catalog");
@@ -76,7 +79,6 @@ export default function Search() {
 
   useEffect(() => {
     setCatalog(null);
-
     fetchProducts();
   }, []);
 
@@ -85,6 +87,7 @@ export default function Search() {
       search: "",
     },
   });
+
   const search = watch("search");
 
   const allSortedProducts = search.trim()
@@ -106,11 +109,15 @@ export default function Search() {
     : null;
 
   return (
-    <View style={styles.darkContainer}>
+    <View
+      style={[{ backgroundColor: theme ? COLORS.appBackground : "#ffffff" }]}
+    >
       <View
         style={[
           styles.headerWrapper,
-          theme ? styles.darkHeaderWrapper : styles.lightHeaderWrapper,
+          theme
+            ? { backgroundColor: COLORS.appBackground }
+            : styles.lightHeaderWrapper,
         ]}
       >
         <Header

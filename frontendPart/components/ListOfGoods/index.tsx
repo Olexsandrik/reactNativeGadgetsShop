@@ -6,10 +6,10 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { useAllProduct } from "@/server/useAllProduct";
 
 import Cards from "../Cards";
+import { useThemeContext } from "../Context";
 
 export default function ListOfGoods() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-
+  const { theme } = useThemeContext();
   const { allProducts, fetchProducts, productLoading, setAllProducts } =
     useAllProduct("server/products");
 
@@ -17,10 +17,10 @@ export default function ListOfGoods() {
     <View
       style={[
         styles.container,
-        isDarkMode ? styles.darkContainer : styles.lightContainer,
+        theme ? styles.darkContainer : styles.lightContainer,
       ]}
     >
-      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
+      <StatusBar barStyle={theme ? "light-content" : "dark-content"} />
 
       <View style={styles.logoContainer}>
         <Image
@@ -32,7 +32,7 @@ export default function ListOfGoods() {
       <Cards
         activeSource="all"
         allProducts={allProducts}
-        theme={isDarkMode}
+        theme={theme}
         productLoading={productLoading}
         fetchProducts={fetchProducts}
       />

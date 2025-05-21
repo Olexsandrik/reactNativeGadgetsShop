@@ -16,6 +16,9 @@ export default function ProductsCarts({ item, theme }: ProductCartProps) {
   const handlerProduct = (item: Products) => {
     navigation.navigate("ScreenProduct", { item });
   };
+
+  const shortName =
+    item.name.length > 0 ? item.name.slice(0, 10) + "..." : item.name;
   return (
     <Pressable onPress={() => handlerProduct(item)}>
       <View
@@ -32,7 +35,7 @@ export default function ProductsCarts({ item, theme }: ProductCartProps) {
           <Text
             style={[styles.name, theme ? styles.darkText : styles.lightText]}
           >
-            {item.name}
+            {shortName}
           </Text>
           <Text
             style={[styles.price, theme ? styles.darkPrice : styles.lightPrice]}

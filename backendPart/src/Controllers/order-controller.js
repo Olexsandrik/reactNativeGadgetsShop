@@ -76,7 +76,18 @@ const OrderController = {
         },
       });
 
-      res.status(200).json(findAllOrderItem);
+      const findOrderTotalPricePrev = await prisma.order.findMany({
+        where: { id: orderId },
+        select: {
+          totalPrice: true,
+        },
+      });
+
+      const findOrderTotalPrice = findOrderTotalPricePrev.map((item) => {
+        return item > 0 ? 0 : item;
+      });
+
+      res.status(200).json({ findAllOrderItem, findOrderTotalPrice });
     } catch (error) {
       console.error("GetAllOrder  error:", error);
       res

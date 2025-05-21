@@ -20,11 +20,11 @@ export default function RootNavigator() {
     },
   };
 
-  const { user, loading } = useAuthContext();
-  if (loading) {
+  const { user, initialLoading } = useAuthContext();
+  if (initialLoading) {
     return (
       <Spinner
-        visible={loading}
+        visible={initialLoading}
         textContent={"Loading..."}
         textStyle={{ color: "#FFF" }}
       />
@@ -33,7 +33,7 @@ export default function RootNavigator() {
 
   return (
     <NavigationContainer theme={MyTheme}>
-     { user ? <NavigationTab /> :<AuthNavigation />}
+      {user ? <NavigationTab /> : <AuthNavigation />}
     </NavigationContainer>
   );
 }

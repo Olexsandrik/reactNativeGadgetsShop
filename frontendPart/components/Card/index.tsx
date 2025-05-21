@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import Input from "../Input";
 import { useAuthContext } from "../Context/AuthContext";
@@ -23,7 +24,7 @@ export default function Card({
   const [quantity, setQuantity] = useState(1);
   const [showRemoveButton, setShowRemoveButton] = useState(true);
 
-  const { user } = useAuthContext();
+  const { user, refreshUser, loadingRefresh } = useAuthContext();
   const {
     handleSubmit,
     watch,
@@ -51,6 +52,8 @@ export default function Card({
     setOrderData(actualData);
 
     setShowRemoveButton(false);
+
+    await refreshUser();
   };
 
   const handleRemoveFromCart = () => {
@@ -134,7 +137,13 @@ export default function Card({
               onPress={handleRemoveFromCart}
               activeOpacity={0.7}
             >
-              <Text style={styles.removeButtonText}>Remove</Text>
+              {loadingRefresh ? (
+                <>
+                  <ActivityIndicator size="small" color="#fff" />
+                </>
+              ) : (
+                <Text style={styles.removeButtonText}>Remove</Text>
+              )}
             </TouchableOpacity>
           )}
         </View>

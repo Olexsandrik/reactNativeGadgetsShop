@@ -1,19 +1,40 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import React from "react";
-import { OrderItem, OrdersCardProps } from "@/types";
+import {
+  GetAllOrderItemResponse,
+  OrderItem,
+  OrdersCardProps,
+  User,
+} from "@/types";
 import { COLORS } from "@/constants";
 import { useRemoveOrderItem } from "@/server/useRemoveOrderItem";
+import { useAuthContext } from "../Context/AuthContext";
 
-export default function OrdersCard({ item, setAllOrderItem }: OrdersCardProps) {
+export default function OrdersCard({ item, setUser }: OrdersCardProps) {
+  const { user, refreshUser } = useAuthContext();
   const { handleRemoveOrderItem } = useRemoveOrderItem(
-    `server/product/${item?.product?.id}/order/${22}`
+    `server/product/${item?.product?.id}/order/${user.orders[0].id}`
   );
 
-  const handleRemoveItem = () => {
-    setAllOrderItem((prev: OrderItem[]) =>
-      prev.filter((it) => it.id !== item.id)
-    );
-    handleRemoveOrderItem();
+  const handleRemoveItem = async () => {
+    setUser((prev: any) => {
+      const updatedOrders = prev.orders.map((order: any, index: number) => {
+        if (index !== 0) return order;
+        return {
+          ...order,
+          items: order.items.filter((it: any) => it.id !== item.id),
+        };
+      });
+
+      return {
+        ...prev,
+        orders: updatedOrders,
+      };
+    });
+
+    await handleRemoveOrderItem();
+
+    await refreshUser();
   };
 
   const shortName =

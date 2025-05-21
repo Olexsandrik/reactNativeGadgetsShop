@@ -1,20 +1,27 @@
 import { View, Text } from "react-native";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoginPropsLogin, PropsChildren, User } from "@/types";
 import { BASE_URL } from "@/constants";
-import { useNavigation } from "@react-navigation/native";
 
 const authChange = createContext({});
 export default function AuthContext({ children }: PropsChildren) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingRefresh, setLoadingRefresh] = useState(false);
+
+  const [initialLoading, setInitialLoading] = useState(false);
 
   const login = async ({ token, userData }: LoginPropsLogin) => {
     await AsyncStorage.setItem("token", token);
     setUser(userData);
 
-    console.log(token);
+    await refreshUser();
   };
 
   const logout = async () => {
@@ -22,41 +29,59 @@ export default function AuthContext({ children }: PropsChildren) {
     setUser(null);
   };
 
-  const checkToken = async () => {
+  const structredForToken = async () => {
     const token = await AsyncStorage.getItem("token");
-    setLoading(true);
-    try {
-      const res = await fetch(`${BASE_URL}/server/me`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const res = await fetch(`${BASE_URL}/server/me`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      if (res.ok) {
-        const userData = await res.json();
-        setUser(userData);
-      } else {
-        await AsyncStorage.removeItem("token");
-      }
+    if (res.ok) {
+      const userData = await res.json();
+      setUser(userData);
+    } else {
+      await AsyncStorage.removeItem("token");
+    }
+  };
+  const checkToken = async () => {
+    setInitialLoading(true);
+    try {
+      await structredForToken();
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false);
+      setInitialLoading(false);
+    }
+  };
+
+  const refreshUser = async () => {
+    setLoadingRefresh(true);
+    try {
+      await structredForToken();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingRefresh(false);
     }
   };
 
   useEffect(() => {
     checkToken();
   }, []);
+
   return (
     <authChange.Provider
       value={{
         user,
         login,
         logout,
-        loading,
+        loadingRefresh,
+        initialLoading,
         checkToken,
+        refreshUser,
+        setUser,
       }}
     >
       {children}

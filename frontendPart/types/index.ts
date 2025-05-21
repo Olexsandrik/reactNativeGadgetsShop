@@ -37,7 +37,7 @@ export type LoginProps = {
 
 export type OrdersCardProps = {
   item: OrderItem;
-  setAllOrderItem: React.Dispatch<React.SetStateAction<OrderItem[]>>;
+  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
 };
 //Products&Categories
 export type Products = {
@@ -142,4 +142,13 @@ export type OrderItem = {
   quantity: number;
   productId: number;
   product: Products;
+};
+
+export type OrderTotalPriceResponse = {
+  totalPrice: number;
+};
+
+export type GetAllOrderItemResponse = {
+  findAllOrderItem: OrderItem[];
+  findOrderTotalPrice: OrderTotalPriceResponse[];
 };

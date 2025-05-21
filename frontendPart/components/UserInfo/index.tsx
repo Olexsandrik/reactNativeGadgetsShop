@@ -7,7 +7,9 @@ import { COLORS } from "@/constants";
 export default function UserInfo() {
   const { user } = useAuthContext();
   const { theme } = useThemeContext();
-
+  function normalizeToZeroIfNegative(value: number): number {
+    return value < 0 ? 0 : value;
+  }
   return (
     <View style={styles.container}>
       <View
@@ -63,11 +65,11 @@ export default function UserInfo() {
       </View>
 
       <ScrollView style={styles.orders} showsVerticalScrollIndicator={false}>
-        {user.orders?.map((order: any) => (
+        {user.orders.map((order: any) => (
           <View key={order.id} style={styles.orderContainer}>
             <Text style={styles.orderTitle}>Order:</Text>
-            <Text> {order.totalPrice}</Text>
-            {order.items?.slice(7).map((item: any, index: number) => (
+            <Text> {normalizeToZeroIfNegative(order.totalPrice)}</Text>
+            {order.items.slice(3).map((item: any, index: number) => (
               <View
                 key={index}
                 style={[
@@ -94,7 +96,7 @@ export default function UserInfo() {
                         },
                       ]}
                     >
-                      {item.product.name}
+                      {item?.product?.name}
                     </Text>
                     <Text
                       style={[
@@ -104,7 +106,7 @@ export default function UserInfo() {
                         },
                       ]}
                     >
-                      ${item.product.price}
+                      ${item?.product?.price}
                     </Text>
                   </View>
 
@@ -113,9 +115,7 @@ export default function UserInfo() {
                       style={{
                         color: theme ? COLORS.grey300 : COLORS.appBackground,
                       }}
-                    >
-                      {item.quantity}
-                    </Text>
+                    ></Text>
                   </View>
                 </View>
               </View>

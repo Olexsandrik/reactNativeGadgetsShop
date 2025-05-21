@@ -5,28 +5,25 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, FlatList } from "react-native";
 import OrdersCard from "../OrdersCards";
 import { useOrderItemContext } from "../Context/OrderContextProvider";
+import { useAuthContext } from "../Context/AuthContext";
 
 export default function Orders() {
-  const { orderData }: any = useOrderItemContext();
+  const { user, setUser, refreshUser, loadingRefresh } = useAuthContext();
 
-  const { allOrderItem, setAllOrderItem } = useGetAllOrderItem(
-    `server/orders/${orderData?.orderId}`,
-    orderData?.productId
-  );
-
+  const checkOrders = user?.orders?.[0]?.items ?? [];
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {allOrderItem.length === 0 ? (
+        {checkOrders.length === 0 ? (
           <View style={styles.emptyState}>
             <Text style={styles.emptyText}>No orders yet</Text>
           </View>
         ) : (
           <FlatList
-            data={allOrderItem}
+            data={user.orders[0].items}
             keyExtractor={(item: OrderItem) => item.id.toString()}
             renderItem={({ item }) => (
-              <OrdersCard item={item} setAllOrderItem={setAllOrderItem} />
+              <OrdersCard item={item} setUser={setUser} />
             )}
             contentContainerStyle={styles.ordersList}
           />

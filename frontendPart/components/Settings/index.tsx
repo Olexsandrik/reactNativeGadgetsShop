@@ -9,6 +9,7 @@ import UserInfo from "../UserInfo";
 import ChangeTheme from "../ChangeTheme";
 import { COLORS } from "@/constants";
 import { useAuthContext } from "../Context/AuthContext";
+import { useOrderItemContext } from "../Context/OrderContextProvider";
 const Drawer = createDrawerNavigator();
 export default function Settings() {
   const { logout } = useAuthContext();

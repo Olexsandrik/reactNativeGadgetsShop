@@ -66,6 +66,22 @@ router.get("/me", authMiddleware, async (req, res) => {
       orders: {
         select: {
           id: true,
+          totalPrice: true,
+          status: true,
+          createdAt: true,
+          items: {
+            select: {
+              id: true,
+              quantity: true,
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  price: true,
+                },
+              },
+            },
+          },
         },
       },
     },

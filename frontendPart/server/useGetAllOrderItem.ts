@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 
 import { BASE_URL } from "@/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { OrderItem } from "@/types";
+import { GetAllOrderItemResponse, OrderItem } from "@/types";
 
 export const useGetAllOrderItem = (
   mainUrl: string,
   prouctId: number | undefined
 ) => {
-  const [allOrderItem, setAllOrderItem] = useState<OrderItem[]>([]);
+  const [allOrderItem, setAllOrderItem] = useState<GetAllOrderItemResponse>();
 
   const [loading, setLoading] = useState(false);
 

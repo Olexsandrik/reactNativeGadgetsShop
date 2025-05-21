@@ -7,6 +7,7 @@ export const useRemoveOrderItem = (mainUrl: string) => {
   const [loading, setLoading] = useState(false);
 
   const handleRemoveOrderItem = async () => {
+    if (!mainUrl) return;
     setLoading(true);
 
     try {
@@ -23,7 +24,6 @@ export const useRemoveOrderItem = (mainUrl: string) => {
       if (!response.ok) {
         throw new Error("Orders failed");
       }
-      const res = await response.json();
     } catch (error) {
       console.error(error);
     }
